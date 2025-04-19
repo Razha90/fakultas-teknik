@@ -14,7 +14,7 @@ Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
-Volt::route('example', 'example-bootstrap')->name('example');
+Volt::route('example', 'admin/example-bootstrap')->name('example');
 
 Route::middleware(['auth'])->group(function () {
     Route::redirect('settings', 'settings/profile');
