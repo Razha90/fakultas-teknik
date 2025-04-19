@@ -12,6 +12,7 @@ new #[Layout('components.layouts.bootstraps-layout')] class extends Component {
     <button class="btn btn-secondary">Tombol Kedua</button>
     <button class="btn btn-success">Tombol Sukses</button>
     <button class="btn btn-danger"><i class="bi bi-0-circle"></i>Tombol Error</button>
+    
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
