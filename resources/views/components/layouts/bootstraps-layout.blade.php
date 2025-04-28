@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
+<html lang="{{ Cookie::get('locale', 'id') }}">
 
 <head>
     @include('partials.bootstrap')
