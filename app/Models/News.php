@@ -13,7 +13,6 @@ class News extends Model
         'title',
         'content',
         'views',
-        'likes',
         'image'
     ];
     

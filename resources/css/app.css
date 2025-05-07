@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Tagesschrift&display=swap');
 @import 'tailwindcss';
 @import "tailwindcss-animated";
 @source '../views';
@@ -10,6 +11,8 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
     --color-primary: #079f56; /* hijau */
     --color-primary-dark: #006534;
+    --color-primary-light: #22cd6f;
+    --color-secondary-warn: #f8c50f; /* kuning */
     --color-secondary: #181b31;
     --color-accent-white: #ffffff; /* putih */
     --color-secondary-accent: #141622;
@@ -17,6 +20,7 @@
     --max-width: 1920px;
     --breakpoint-extra: 1920px;
     --font-merriweather: 'Merriweather', serif;
+    --font-tagesschrift: 'Tagesschrift', system-ui;
 
     --animate-growing:growing 1s ease-out forwards;
     @keyframes growing {
