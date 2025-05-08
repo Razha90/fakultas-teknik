@@ -178,7 +178,7 @@ new #[Layout('components.layouts.home')] class extends Component {
             <div class="relative">
                 <div x-init="initVid" style="will-change: opacity;"
                     class="shadow-3xl animate-fade relative aspect-video overflow-hidden">
-                    <video x-show="svgLoaded" autoplay muted loop playsinline
+                    <video x-cloak x-show="svgLoaded" autoplay muted loop playsinline
                         class="animate-fade absolute inset-0 z-10 h-full w-full object-cover" @canplay="play = true"
                         x-init="play = false" :class="{ 'hidden': !play }">
                         <source src="{{ asset('vid/bg.mp4') }}" type="video/mp4">
