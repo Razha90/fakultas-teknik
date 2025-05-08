@@ -529,7 +529,7 @@ new #[Layout('components.layouts.home')] class extends Component {
                     </template>
                 </div>
             </div>
-            <div class="bg-primary event-1:w-[405px] w-[500px] px-5 py-10 xl:bg-transparent" x-data="{ scrolled: false }"
+            <div class="relative bg-primary event-1:w-[405px] w-[500px] px-5 py-10 xl:bg-transparent" x-data="{ scrolled: false }"
                 x-intersect="scrolled = true">
                 <img class="absolute left-0 top-0 z-10 block h-full w-full object-cover opacity-10 xl:hidden"
                     src="{{ asset('img/bg-poly.svg') }}" />
