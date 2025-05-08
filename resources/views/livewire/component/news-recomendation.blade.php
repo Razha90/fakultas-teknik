@@ -8,7 +8,7 @@ new class extends Component {
     public function search()
     {
         try {
-            $this->data = News::with('categories', 'user')->orderBy('created_at', 'desc')->orderBy('views', 'desc')->limit(4)->get()->toArray();
+            $this->data = News::with('categories', 'user')->orderBy('created_at', 'desc')->orderBy('views', 'desc')->limit(7)->get()->toArray();
         } catch (\Throwable $th) {
             $this->dispatch('failed', [
                 'message' => __('news.error'),
@@ -18,9 +18,9 @@ new class extends Component {
 }; ?>
 
 <div x-data="initRecomendation" x-init="init" x-intersect="shown = true"
-    class="h-[390px] min-h-[390px] w-[20%] min-w-[350px] rounded-xl border border-gray-200 shadow-xl bg-accent-white">
+    class="lg:w-[20%] w-full min-w-[350px] bg-accent-white">
     <div class="flex flex-row justify-between border-b-2 border-gray-200 px-5 pb-3 pt-5">
-        <h2 class="text-primary w-full text-xl font-bold">{{ __('news.most_liked') }}</h2>
+        <h2 class="text-primary w-full text-xl font-bold">{{ __('news.most_views') }}</h2>
         <svg @click="goToPage('{{ route('news-search') }}')" class="text-primary w-[35px] transition-all hover:opacity-60 cursor-pointer" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
             <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
@@ -30,7 +30,7 @@ new class extends Component {
             </g>
         </svg>
     </div>
-    <div class="flex w-full flex-col gap-y-4 px-5 py-3">
+    <div class="flex w-full lg:flex-col flex-wrap gap-y-4 px-5 py-3">
         <template x-if="!datas || (Array.isArray(datas) && datas.length === 0)">
             <template x-for="(data, index) in 4" :key="index">
                 <div x-show="shown" class="animate-fade flex w-full flex-row gap-x-2">
@@ -56,7 +56,7 @@ new class extends Component {
 
         <template x-if="datas && Array.isArray(datas) && datas.length > 0">
             <template x-for="(data, index) in datas" :key="index">
-                <div x-show="shown" class="animate-fade cursor-pointer hover:bg-gray-200 transition-all rounded-xl flex w-full flex-row gap-x-2" x-data="{ mouse: false }"
+                <div x-show="shown" class="animate-fade cursor-pointer hover:bg-gray-200 transition-all rounded-xl flex flex-row gap-x-2 w-[350px]" x-data="{ mouse: false }"
                     @mouseenter="mouse = true" @mouseleave="mouse = false" @click="goToNews(data.id)">
                     <template x-if="!data.image">
                         <div

@@ -3,7 +3,7 @@
 return [
   'breaking_news' => 'Berita Terbaru',
   'error' => 'Terjadi kesalahan saat mengambil berita terbaru.',
-  'most_liked' => 'Berita Paling Disukai',
+  'most_views' => 'Berita Terpopuler',
   'not_found' => 'Data Tidak ditemukan.',
   'share' => 'Bagikan',
   'posted' => 'Diposting pada',

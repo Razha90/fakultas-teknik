@@ -3,7 +3,7 @@
 return [
   'breaking_news' => 'Breaking News',
   'error' => 'An error occurred while fetching the latest news.',
-  'most_liked' => 'Most Liked News',
+  'most_views' => 'Most Viewed News',
   'not_found' => 'Data Not Found.',
   'share' => 'Share',
   'posted' => 'Posted on',

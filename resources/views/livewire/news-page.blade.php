@@ -42,8 +42,8 @@ new #[Layout('components.layouts.home')] class extends Component {
             content="Website resmi Universitas Negeri Medan - informasi akademik, berita kampus, dan layanan mahasiswa.">
     @endpush
     @vite(['resources/js/moment.js'])
-    <div class="mx-auto mt-32 flex max-w-7xl flex-row gap-x-3 px-5 lg:px-0">
-        <div class="hidden lg:block">
+    <div class="mx-auto nav-2:mt-32 mt-20 flex max-w-7xl flex-col gap-x-3 px-5 lg:flex-row lg:px-0">
+        <div class="order-2 lg:order-1">
             <template x-if="!datas || (Array.isArray(datas) && datas.length === 0)">
                 <div class="flex flex-col items-center justify-center rounded-xl bg-gray-100 px-4 py-2">
                     <div
@@ -78,23 +78,26 @@ new #[Layout('components.layouts.home')] class extends Component {
                 </div>
             </template>
             <template x-if="datas">
-                <div class="relative h-full w-24">
-                    <div class="sticky top-32 flex flex-col items-center justify-center rounded-xl py-2">
-                        <div class="animate-fade flex items-center justify-center">
-                            <svg class="w-[35px] text-gray-500" viewBox="0 0 24 24" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                                <g id="SVGRepo_iconCarrier">
-                                    <circle cx="12" cy="12" r="4" fill="currentColor"></circle>
-                                    <path d="M21 12C21 12 20 4 12 4C4 4 3 12 3 12" stroke="currentColor"
-                                        stroke-width="2">
-                                    </path>
-                                </g>
-                            </svg>
+                <div class="relative h-auto w-auto lg:h-full lg:w-24">
+                    <div
+                        class="static top-32 flex flex-row justify-center gap-x-3 rounded-xl py-2 lg:sticky lg:flex-col">
+                        <div class="flex flex-col items-center justify-center lg:flex-row">
+                            <div class="animate-fade flex items-center justify-center">
+                                <svg class="w-[35px] text-gray-500" viewBox="0 0 24 24" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                    <g id="SVGRepo_iconCarrier">
+                                        <circle cx="12" cy="12" r="4" fill="currentColor"></circle>
+                                        <path d="M21 12C21 12 20 4 12 4C4 4 3 12 3 12" stroke="currentColor"
+                                            stroke-width="2">
+                                        </path>
+                                    </g>
+                                </svg>
+                            </div>
+                            <p class="text-sm text-gray-500" x-text="formatView(datas.views)"></p>
                         </div>
-                        <p class="text-sm text-gray-500" x-text="formatView(datas.views)"></p>
-                        <div class="mt-3 flex cursor-pointer select-none flex-col items-center justify-center rounded-xl p-2 transition-all hover:bg-blue-100"
+                        <div class="mt-0 flex cursor-pointer select-none flex-col items-center justify-center rounded-xl p-2 transition-all hover:bg-blue-100 lg:mt-3"
                             @click="$dispatch('shared')">
                             <svg class="w-[35px] text-blue-400" viewBox="0 -0.5 25 25" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
@@ -109,12 +112,11 @@ new #[Layout('components.layouts.home')] class extends Component {
                             </svg>
                             <p class="text-sm text-blue-400">{{ __('news.share') }}</p>
                         </div>
-
                     </div>
                 </div>
             </template>
         </div>
-        <div class="bg-accent-white w-full pl-2 border-l border-primary-light/30">
+        <div class="bg-accent-white border-primary-light/30 order-1 w-full border-l pl-2 lg:order-2">
             <template x-if="!datas || (Array.isArray(datas) && datas.length === 0)">
                 <div class="bg-accent-white">
                     <div
@@ -173,8 +175,8 @@ new #[Layout('components.layouts.home')] class extends Component {
                                     x-text="changeDate(datas.created_at)"></span></p>
                         </div>
                     </div>
-                    <div class="mt-10">
-                        <h1 class="text-primary text-center text-4xl font-bold" x-text="datas.title"></h1>
+                    <div class="ftnews-1:mt-10 mt-5">
+                        <h1 class="text-primary text-center text-2xl font-bold lg:text-4xl ftnews-1:text-xl" x-text="datas.title"></h1>
                     </div>
                     <div class="mt-10">
                         <style>
@@ -203,110 +205,16 @@ new #[Layout('components.layouts.home')] class extends Component {
                             </template>
                         </div>
                     </div>
-                    <div class="block lg:hidden">
-                        <template x-if="!datas || (Array.isArray(datas) && datas.length === 0)">
-                            <div class="flex flex-row items-center justify-center rounded-xl px-4 py-2">
-                                <div
-                                    class="animate-fade flex h-[50px] w-[50px] animate-pulse items-center justify-center overflow-hidden rounded-xl rounded-t-xl bg-gray-300 dark:bg-gray-700">
-                                    <svg class="h-[35px] w-[35px] object-cover text-gray-200 dark:text-gray-600"
-                                        aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
-                                        viewBox="0 0 20 18">
-                                        <path
-                                            d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z" />
-                                    </svg>
-                                </div>
-                                <div
-                                    class="animate-fade mt-1 h-4 w-[35px] animate-pulse rounded-full bg-gray-200 dark:bg-gray-700">
-                                </div>
-                                <div
-                                    class="animate-fade mt-3 flex h-[50px] w-[50px] animate-pulse items-center justify-center overflow-hidden rounded-xl rounded-t-xl bg-gray-300 dark:bg-gray-700">
-                                    <svg class="h-[35px] w-[35px] object-cover text-gray-200 dark:text-gray-600"
-                                        aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
-                                        viewBox="0 0 20 18">
-                                        <path
-                                            d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z" />
-                                    </svg>
-                                </div>
-                                <div
-                                    class="animate-fade mt-1 h-4 w-[35px] animate-pulse rounded-full bg-gray-200 dark:bg-gray-700">
-                                </div>
-                                <div
-                                    class="animate-fade mt-3 flex h-[50px] w-[50px] animate-pulse items-center justify-center overflow-hidden rounded-xl rounded-t-xl bg-gray-300 dark:bg-gray-700">
-                                    <svg class="h-[35px] w-[35px] object-cover text-gray-200 dark:text-gray-600"
-                                        aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
-                                        viewBox="0 0 20 18">
-                                        <path
-                                            d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z" />
-                                    </svg>
-                                </div>
-                                <div class="mt-1 h-4 w-[35px] animate-pulse rounded-full bg-gray-200 dark:bg-gray-700">
-                                </div>
-                            </div>
-                        </template>
-                        <template x-if="datas">
-                            <div class="border-primary-light/30 mt-5 relative w-full border-t">
-                                <div class="flex gap-x-3 flex-row items-center justify-center rounded-xl">
-                                    <div class="animate-fade flex-col flex items-center justify-center">
-                                        <svg class="w-[35px] text-gray-500" viewBox="0 0 24 24" fill="none"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round"
-                                                stroke-linejoin="round"></g>
-                                            <g id="SVGRepo_iconCarrier">
-                                                <circle cx="12" cy="12" r="4" fill="currentColor">
-                                                </circle>
-                                                <path d="M21 12C21 12 20 4 12 4C4 4 3 12 3 12" stroke="currentColor"
-                                                    stroke-width="2">
-                                                </path>
-                                            </g>
-                                        </svg>
-                                    <p class="text-sm text-gray-500" x-text="formatView(datas.views)"></p>
-
-                                    </div>
-                                    <div class="flex cursor-pointer select-none flex-col items-center justify-center rounded-xl p-2 transition-all hover:bg-blue-100"
-                                        @click="$dispatch('shared')">
-                                        <svg class="w-[35px] text-blue-400" viewBox="0 -0.5 25 25" fill="none"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round"
-                                                stroke-linejoin="round"></g>
-                                            <g id="SVGRepo_iconCarrier">
-                                                <path fill-rule="evenodd" clip-rule="evenodd"
-                                                    d="M14.734 15.8974L19.22 12.1374C19.3971 11.9927 19.4998 11.7761 19.4998 11.5474C19.4998 11.3187 19.3971 11.1022 19.22 10.9574L14.734 7.19743C14.4947 6.9929 14.1598 6.94275 13.8711 7.06826C13.5824 7.19377 13.3906 7.47295 13.377 7.78743V9.27043C7.079 8.17943 5.5 13.8154 5.5 16.9974C6.961 14.5734 10.747 10.1794 13.377 13.8154V15.3024C13.3888 15.6178 13.5799 15.8987 13.8689 16.0254C14.158 16.1521 14.494 16.1024 14.734 15.8974Z"
-                                                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                                                    stroke-linejoin="round"></path>
-                                            </g>
-                                        </svg>
-                                        <p class="text-sm text-blue-400">{{ __('news.share') }}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </template>
-                    </div>
                 </div>
             </template>
         </div>
-        <div class="w-[350px]">
-            <div class="sticky top-32"><livewire:component.news-recomendation /></div>
+        <div class="order-3">
+            <div class="static top-32 lg:sticky"><livewire:component.news-recomendation /></div>
         </div>
     </div>
-    <div class="mx-auto mb-5 mt-14 flex max-w-7xl flex-col gap-x-3 gap-y-7 px-10">
-        <template x-if="!datas || (Array.isArray(datas) && datas.length === 0)">
 
-            <div class="animate-fade mt-1 h-8 w-56 animate-pulse rounded-full bg-gray-200 dark:bg-gray-700 ml-20">
-            </div>
 
-        </template>
-        <template x-if="datas">
-            <div class="pl-20">
-                <h2
-                    class="text-primary text-primary relative inline-block text-2xl font-bold after:absolute after:-bottom-1 after:left-0 after:block after:h-[4px] after:w-1/4 after:rounded-full after:bg-green-400 after:transition-all after:duration-300 hover:after:w-full">
-                    {{ __('news.related_post') }}</h2>
-            </div>
-        </template>
-        <livewire:component.news-post />
-    </div>
-    <div x-data="{
+    <div x-cloak x-data="{
         showup: false,
         get getLink() {
             const fullUrl = window.location.href;
@@ -443,6 +351,14 @@ new #[Layout('components.layouts.home')] class extends Component {
                 </div>
             </div>
         </div>
+    </div>
+    <div class="flex flex-col mt-10">
+        <div class="text-center">
+            <h2
+                class="text-primary text-primary relative inline-block text-2xl font-bold after:absolute after:-bottom-1 after:left-0 after:block after:h-[4px] after:w-1/4 after:rounded-full after:bg-green-400 after:transition-all after:duration-300 hover:after:w-full">
+                {{ __('news.related_post') }}</h2>
+        </div>
+        <livewire:component.news-post />
     </div>
 </div>
 <script>

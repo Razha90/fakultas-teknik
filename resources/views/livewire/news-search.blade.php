@@ -2,6 +2,7 @@
 
 use Livewire\Volt\Component;
 use Livewire\Attributes\Layout;
+use App\Models\News;
 
 new #[Layout('components.layouts.home')] class extends Component {
     public $category;
@@ -10,6 +11,33 @@ new #[Layout('components.layouts.home')] class extends Component {
     public function mount()
     {
         $this->category = request()->query('category');
+        $this->search();
+    }
+
+    public function search($search = '', $sort = 'asc', $page = 1, $limit = 10, $category = '', $dateStart = '', $dateWhen = '')
+    {
+        try {
+            // $this->data = News::with('categories')
+            // ->when($search, fn($q) => $q->where('title', 'like', "%{$search}%"))
+            // ->when($category, fn($q) => $q->where('category_id', $category))
+            // ->orderBy('created_at', $sort)
+            // ->paginate($limit, ['*'], 'page', $page)->toArray();
+            $this->data = News::with('categories', 'user')
+                ->when($search, fn($q) => $q->where('title', 'like', "%{$search}%"))
+                ->when($category, fn($q) => $q->where('category_id', $category))
+                ->when($dateStart, function ($q) use ($dateStart, $dateWhen) {
+                    if ($dateWhen === '') {
+                        $q->whereDate('created_at', '>=', $dateStart);
+                    } else {
+                        $q->whereBetween('created_at', [$dateStart, $dateWhen]);
+                    }
+                })
+                ->orderBy('created_at', $sort)
+                ->paginate($limit, ['*'], 'page', $page)
+                ->toArray();
+        } catch (\Throwable $th) {
+            $this->error = __('news.not_found');
+        }
     }
 }; ?>
 
@@ -19,8 +47,7 @@ new #[Layout('components.layouts.home')] class extends Component {
         <meta name="description"
             content="Website resmi Universitas Negeri Medan - informasi akademik, berita kampus, dan layanan mahasiswa.">
     @endpush
-    <livewire:component.nav-no-scroll />
-    <div x-data="initNewsSearch">
+    <div x-data="initNewsSearch" x-init="initSearch">
         <div x-data="{
             image: false,
             init() {
@@ -83,7 +110,7 @@ new #[Layout('components.layouts.home')] class extends Component {
                             this.opened = false;
                         }
                     }" @click.away="opened=false">
-                        <div @click="opened=true"
+                        <div @click="opened=!opened"
                             class="flex cursor-pointer select-none flex-row items-center gap-x-1 rounded-xl border border-gray-400 p-2 transition-all hover:bg-gray-100">
                             <div class="rounded-xl border border-gray-400 p-1 text-gray-400">
                                 <svg class="w-[25px]" fill="currentColor" x-show="sort == 'asc'" viewBox="0 0 32 32"
@@ -156,13 +183,15 @@ new #[Layout('components.layouts.home')] class extends Component {
             initSearch() {
                 if (this.initStop) return;
                 this.initStop = true;
-                this.$watch('search', (value) => {
+                console.log(this.datas);
 
-                });
-                this.$watch('sort', (value) => {
+                // this.$watch('search', (value) => {
 
-                });
-            },
+                // });
+                // this.$watch('sort', (value) => {
+
+                // });
+            }
         }
     }
 </script>
