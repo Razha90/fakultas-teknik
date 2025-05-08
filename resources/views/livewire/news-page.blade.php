@@ -33,30 +33,6 @@ new #[Layout('components.layouts.home')] class extends Component {
             ]);
         }
     }
-
-    public function addLikes($id)
-    {
-        $news = News::find($id);
-        if ($news) {
-            $news->increment('likes');
-        } else {
-            $this->dispatch('failed', [
-                'message' => __('news.error'),
-            ]);
-        }
-    }
-
-    public function removeLikes($id)
-    {
-        $news = News::find($id);
-        if ($news) {
-            $news->decrement('likes');
-        } else {
-            $this->dispatch('failed', [
-                'message' => __('news.error'),
-            ]);
-        }
-    }
 }; ?>
 
 <div x-data="initNewsPage" x-init="init">
@@ -66,10 +42,8 @@ new #[Layout('components.layouts.home')] class extends Component {
             content="Website resmi Universitas Negeri Medan - informasi akademik, berita kampus, dan layanan mahasiswa.">
     @endpush
     @vite(['resources/js/moment.js'])
-
-    <livewire:component.nav-no-scroll />
-    <div class="mx-auto mt-32 flex max-w-7xl flex-row gap-x-3 px-10">
-        <div>
+    <div class="mx-auto mt-32 flex max-w-7xl flex-row gap-x-3 px-5 lg:px-0">
+        <div class="hidden lg:block">
             <template x-if="!datas || (Array.isArray(datas) && datas.length === 0)">
                 <div class="flex flex-col items-center justify-center rounded-xl bg-gray-100 px-4 py-2">
                     <div
@@ -105,8 +79,7 @@ new #[Layout('components.layouts.home')] class extends Component {
             </template>
             <template x-if="datas">
                 <div class="relative h-full w-24">
-                    <div
-                        class="sticky top-32 flex flex-col items-center justify-center rounded-xl bg-gray-100 px-4 py-2">
+                    <div class="sticky top-32 flex flex-col items-center justify-center rounded-xl py-2">
                         <div class="animate-fade flex items-center justify-center">
                             <svg class="w-[35px] text-gray-500" viewBox="0 0 24 24" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
@@ -121,57 +94,6 @@ new #[Layout('components.layouts.home')] class extends Component {
                             </svg>
                         </div>
                         <p class="text-sm text-gray-500" x-text="formatView(datas.views)"></p>
-                        <div class="mt-5 flex flex-row items-center gap-x-1">
-                            <svg class="animate-fade w-[30px] cursor-pointer text-gray-400 transition-all hover:opacity-70"
-                                x-show="!isLiked(datas.id)" @click="giveLikes(datas.id)" viewBox="0 -2.5 21 21"
-                                version="1.1" xmlns="http://www.w3.org/2000/svg"
-                                xmlns:xlink="http://www.w3.org/1999/xlink" fill="currentColor">
-                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round">
-                                </g>
-                                <g id="SVGRepo_iconCarrier">
-                                    <title>love [#1489]</title>
-                                    <desc>Created with Sketch.</desc>
-                                    <defs> </defs>
-                                    <g id="Page-1" stroke="none" stroke-width="1" fill="none"
-                                        fill-rule="evenodd">
-                                        <g id="Dribbble-Light-Preview" transform="translate(-99.000000, -362.000000)"
-                                            fill="currentColor">
-                                            <g id="icons" transform="translate(56.000000, 160.000000)">
-                                                <path
-                                                    d="M55.5929644,215.348992 C55.0175653,215.814817 54.2783665,216.071721 53.5108177,216.071721 C52.7443189,216.071721 52.0030201,215.815817 51.4045211,215.334997 C47.6308271,212.307129 45.2284309,210.70073 45.1034811,207.405962 C44.9722313,203.919267 48.9832249,202.644743 51.442321,205.509672 C51.9400202,206.088455 52.687619,206.420331 53.4940177,206.420331 C54.3077664,206.420331 55.0606152,206.084457 55.5593644,205.498676 C57.9649106,202.67973 62.083004,203.880281 61.8950543,207.507924 C61.7270546,210.734717 59.2322586,212.401094 55.5929644,215.348992 M53.9066671,204.31012 C53.8037672,204.431075 53.6483675,204.492052 53.4940177,204.492052 C53.342818,204.492052 53.1926682,204.433074 53.0918684,204.316118 C49.3717243,199.982739 42.8029348,202.140932 43.0045345,207.472937 C43.1651842,211.71635 46.3235792,213.819564 50.0426732,216.803448 C51.0370217,217.601149 52.2739197,218 53.5108177,218 C54.7508657,218 55.9898637,217.59915 56.9821122,216.795451 C60.6602563,213.815565 63.7787513,211.726346 63.991901,207.59889 C64.2754005,202.147929 57.6173611,199.958748 53.9066671,204.31012">
-                                                </path>
-                                            </g>
-                                        </g>
-                                    </g>
-                                </g>
-                            </svg>
-                            <svg x-show="isLiked(datas.id)" @click="giveLikes(datas.id)"
-                                class="animate-fade w-[30px] cursor-pointer text-red-400 transition-all hover:opacity-70"
-                                viewBox="0 -2.5 21 21" version="1.1" xmlns="http://www.w3.org/2000/svg"
-                                xmlns:xlink="http://www.w3.org/1999/xlink" fill="currentColor">
-                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round">
-                                </g>
-                                <g id="SVGRepo_iconCarrier">
-                                    <title>love [#1488]</title>
-                                    <desc>Created with Sketch.</desc>
-                                    <defs> </defs>
-                                    <g id="Page-1" stroke="none" stroke-width="1" fill="none"
-                                        fill-rule="evenodd">
-                                        <g id="Dribbble-Light-Preview" transform="translate(-139.000000, -361.000000)"
-                                            fill="currentColor">
-                                            <g id="icons" transform="translate(56.000000, 160.000000)">
-                                                <path
-                                                    d="M103.991908,206.599878 C103.779809,210.693878 100.744263,212.750878 96.9821188,215.798878 C94.9997217,217.404878 92.0324261,217.404878 90.042679,215.807878 C86.3057345,212.807878 83.1651892,210.709878 83.0045394,206.473878 C82.8029397,201.150878 89.36438,198.971878 93.0918745,203.314878 C93.2955742,203.552878 93.7029736,203.547878 93.9056233,203.309878 C97.6205178,198.951878 104.274358,201.159878 103.991908,206.599878"
-                                                    id="love-[#1488]"> </path>
-                                            </g>
-                                        </g>
-                                    </g>
-                                </g>
-                            </svg>
-                        </div>
-                        <p class="text-sm text-gray-500" x-text="formatView(datas.likes)"></p>
                         <div class="mt-3 flex cursor-pointer select-none flex-col items-center justify-center rounded-xl p-2 transition-all hover:bg-blue-100"
                             @click="$dispatch('shared')">
                             <svg class="w-[35px] text-blue-400" viewBox="0 -0.5 25 25" fill="none"
@@ -192,14 +114,13 @@ new #[Layout('components.layouts.home')] class extends Component {
                 </div>
             </template>
         </div>
-        <div class="bg-accent-white w-full rounded-xl">
+        <div class="bg-accent-white w-full pl-2 border-l border-primary-light/30">
             <template x-if="!datas || (Array.isArray(datas) && datas.length === 0)">
                 <div class="bg-accent-white">
                     <div
                         class="animate-fade flex h-[400px] w-full animate-pulse items-center justify-center overflow-hidden rounded-xl rounded-t-xl bg-gray-300 dark:bg-gray-700">
-                        <svg class="h-[35px] w-[35px] object-cover text-gray-200 dark:text-gray-600"
-                            aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
-                            viewBox="0 0 20 18">
+                        <svg class="h-[35px] w-[35px] object-cover text-gray-200 dark:text-gray-600" aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
                             <path
                                 d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z" />
                         </svg>
@@ -226,8 +147,9 @@ new #[Layout('components.layouts.home')] class extends Component {
             <template x-if="datas">
                 <div>
                     <div
-                        class="animate-fade flex h-[400px] w-full items-center justify-center overflow-hidden rounded-xl rounded-t-xl bg-gray-300 dark:bg-gray-700">
-                        <img :src="datas.image" class="h-full w-full" />
+                        class="animate-fade relative flex aspect-video items-center justify-center overflow-hidden rounded-xl rounded-t-xl bg-gray-300 dark:bg-gray-700">
+                        <img :src="datas.image"
+                            class="animate-fade absolute inset-0 z-10 h-full w-full object-cover" />
                     </div>
                     <div class="mb-5 mt-4 flex flex-row gap-x-3 px-5">
                         <template x-if="!datas.user.image">
@@ -269,8 +191,8 @@ new #[Layout('components.layouts.home')] class extends Component {
                                 row-gap: 20px;
                             }
                         </style>
-
-                        <div class="mb-3 flex flex-wrap gap-3">
+                        <div id="content" x-html="datas.content"></div>
+                        <div class="mt-3 flex flex-wrap gap-3">
                             <template x-if="datas.categories && datas.categories.length > 0">
                                 <template x-for="(item, key) in datas.categories">
                                     <div x-text="item.name"
@@ -280,7 +202,86 @@ new #[Layout('components.layouts.home')] class extends Component {
                                 </template>
                             </template>
                         </div>
-                        <div id="content" x-html="datas.content"></div>
+                    </div>
+                    <div class="block lg:hidden">
+                        <template x-if="!datas || (Array.isArray(datas) && datas.length === 0)">
+                            <div class="flex flex-row items-center justify-center rounded-xl px-4 py-2">
+                                <div
+                                    class="animate-fade flex h-[50px] w-[50px] animate-pulse items-center justify-center overflow-hidden rounded-xl rounded-t-xl bg-gray-300 dark:bg-gray-700">
+                                    <svg class="h-[35px] w-[35px] object-cover text-gray-200 dark:text-gray-600"
+                                        aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                        viewBox="0 0 20 18">
+                                        <path
+                                            d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z" />
+                                    </svg>
+                                </div>
+                                <div
+                                    class="animate-fade mt-1 h-4 w-[35px] animate-pulse rounded-full bg-gray-200 dark:bg-gray-700">
+                                </div>
+                                <div
+                                    class="animate-fade mt-3 flex h-[50px] w-[50px] animate-pulse items-center justify-center overflow-hidden rounded-xl rounded-t-xl bg-gray-300 dark:bg-gray-700">
+                                    <svg class="h-[35px] w-[35px] object-cover text-gray-200 dark:text-gray-600"
+                                        aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                        viewBox="0 0 20 18">
+                                        <path
+                                            d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z" />
+                                    </svg>
+                                </div>
+                                <div
+                                    class="animate-fade mt-1 h-4 w-[35px] animate-pulse rounded-full bg-gray-200 dark:bg-gray-700">
+                                </div>
+                                <div
+                                    class="animate-fade mt-3 flex h-[50px] w-[50px] animate-pulse items-center justify-center overflow-hidden rounded-xl rounded-t-xl bg-gray-300 dark:bg-gray-700">
+                                    <svg class="h-[35px] w-[35px] object-cover text-gray-200 dark:text-gray-600"
+                                        aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                        viewBox="0 0 20 18">
+                                        <path
+                                            d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z" />
+                                    </svg>
+                                </div>
+                                <div class="mt-1 h-4 w-[35px] animate-pulse rounded-full bg-gray-200 dark:bg-gray-700">
+                                </div>
+                            </div>
+                        </template>
+                        <template x-if="datas">
+                            <div class="border-primary-light/30 mt-5 relative w-full border-t">
+                                <div class="flex gap-x-3 flex-row items-center justify-center rounded-xl">
+                                    <div class="animate-fade flex-col flex items-center justify-center">
+                                        <svg class="w-[35px] text-gray-500" viewBox="0 0 24 24" fill="none"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round"
+                                                stroke-linejoin="round"></g>
+                                            <g id="SVGRepo_iconCarrier">
+                                                <circle cx="12" cy="12" r="4" fill="currentColor">
+                                                </circle>
+                                                <path d="M21 12C21 12 20 4 12 4C4 4 3 12 3 12" stroke="currentColor"
+                                                    stroke-width="2">
+                                                </path>
+                                            </g>
+                                        </svg>
+                                    <p class="text-sm text-gray-500" x-text="formatView(datas.views)"></p>
+
+                                    </div>
+                                    <div class="flex cursor-pointer select-none flex-col items-center justify-center rounded-xl p-2 transition-all hover:bg-blue-100"
+                                        @click="$dispatch('shared')">
+                                        <svg class="w-[35px] text-blue-400" viewBox="0 -0.5 25 25" fill="none"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round"
+                                                stroke-linejoin="round"></g>
+                                            <g id="SVGRepo_iconCarrier">
+                                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                                    d="M14.734 15.8974L19.22 12.1374C19.3971 11.9927 19.4998 11.7761 19.4998 11.5474C19.4998 11.3187 19.3971 11.1022 19.22 10.9574L14.734 7.19743C14.4947 6.9929 14.1598 6.94275 13.8711 7.06826C13.5824 7.19377 13.3906 7.47295 13.377 7.78743V9.27043C7.079 8.17943 5.5 13.8154 5.5 16.9974C6.961 14.5734 10.747 10.1794 13.377 13.8154V15.3024C13.3888 15.6178 13.5799 15.8987 13.8689 16.0254C14.158 16.1521 14.494 16.1024 14.734 15.8974Z"
+                                                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                                    stroke-linejoin="round"></path>
+                                            </g>
+                                        </svg>
+                                        <p class="text-sm text-blue-400">{{ __('news.share') }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
                     </div>
                 </div>
             </template>
@@ -289,10 +290,12 @@ new #[Layout('components.layouts.home')] class extends Component {
             <div class="sticky top-32"><livewire:component.news-recomendation /></div>
         </div>
     </div>
-    <div class="mb-50 mx-auto mt-14 flex max-w-7xl flex-col gap-x-3 gap-y-7 px-10">
+    <div class="mx-auto mb-5 mt-14 flex max-w-7xl flex-col gap-x-3 gap-y-7 px-10">
         <template x-if="!datas || (Array.isArray(datas) && datas.length === 0)">
-            <div class="ml-20 animate-fade mt-1 h-8 w-56 animate-pulse rounded-full bg-gray-200 dark:bg-gray-700">
+
+            <div class="animate-fade mt-1 h-8 w-56 animate-pulse rounded-full bg-gray-200 dark:bg-gray-700 ml-20">
             </div>
+
         </template>
         <template x-if="datas">
             <div class="pl-20">
@@ -303,7 +306,6 @@ new #[Layout('components.layouts.home')] class extends Component {
         </template>
         <livewire:component.news-post />
     </div>
-    <livewire:component.footer />
     <div x-data="{
         showup: false,
         get getLink() {
@@ -449,7 +451,6 @@ new #[Layout('components.layouts.home')] class extends Component {
             datas: @entangle('data').live,
             error: @entangle('error').live,
             stopInit: false,
-            likes: JSON.parse(localStorage.getItem('likes')) || [],
             init() {
                 if (this.stopInit) {
                     return;
@@ -469,9 +470,7 @@ new #[Layout('components.layouts.home')] class extends Component {
                     }
                 })
             },
-            isLiked(id) {
-                return this.likes.includes(id);
-            },
+
             changeDate(createdAt) {
                 const formattedTime = moment(createdAt).fromNow(); // Menggunakan moment.js yang sudah tersedia
                 return formattedTime;
@@ -500,22 +499,7 @@ new #[Layout('components.layouts.home')] class extends Component {
                     return number.toString();
                 }
             },
-            giveLikes(idLikes) {
-                if (!this.likes) {
-                    this.likes = [];
-                }
-                const index = this.likes.indexOf(idLikes);
-                if (index === -1) {
-                    this.$wire.addLikes(idLikes);
-                    this.likes.push(idLikes);
-                    this.datas.likes += 1;
-                } else {
-                    this.$wire.removeLikes(idLikes);
-                    this.likes.splice(index, 1);
-                    this.datas.likes -= 1;
-                }
-                localStorage.setItem('likes', JSON.stringify(this.likes));
-            }
+
         }
     }
 </script>

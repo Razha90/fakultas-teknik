@@ -154,17 +154,14 @@ new #[Layout('components.layouts.home')] class extends Component {
 <div x-data="initHome" x-init="init">
     @vite(['resources/js/moment.js'])
 
-    <section class="bg-primary relative w-full bg-gradient-to-b">
+    <section class="bg-primary pt-18 relative w-full bg-gradient-to-b sm:pt-24 lg:pt-0">
         <img class="absolute left-0 top-0 z-0 h-full w-full" src="{{ asset('img/bg-primary.png') }}" />
-
-
         @push('meta')
             <meta name="keywords" content="universitas, pendidikan, Medan, kampus, unimed, mahasiswa, akademik">
             <meta name="description"
                 content="Website resmi Universitas Negeri Medan - informasi akademik, berita kampus, dan layanan mahasiswa.">
         @endpush
-        <!-- <div class="bg-primary h-[1000px] w-full"></div> -->
-        <div class="mx-auto min-h-[990px] max-w-[var(--max-width)]" x-data="{
+        <div class="mx-auto max-w-[var(--max-width)]" x-data="{
             play: false,
             svgLoaded: false,
             initVid() {
@@ -178,41 +175,33 @@ new #[Layout('components.layouts.home')] class extends Component {
                 }, 3000);
             },
         }">
-            <div class="relative px-10">
+            <div class="relative">
                 <div x-init="initVid" style="will-change: opacity;"
-                    class="mask-image shadow-3xl animate-fade relative min-h-[990px] w-full overflow-hidden rounded-xl bg-gray-300">
-                    <div x-show="svgLoaded" class="absolute left-0 top-0 h-[120%] w-full bg-black opacity-50"></div>
-                    <video x-show="svgLoaded" autoplay muted loop playsinline class="w-full" @canplay="play = true"
+                    class="shadow-3xl animate-fade relative aspect-video overflow-hidden">
+                    <video x-show="svgLoaded" autoplay muted loop playsinline
+                        class="animate-fade absolute inset-0 z-10 h-full w-full object-cover" @canplay="play = true"
                         x-init="play = false" :class="{ 'hidden': !play }">
                         <source src="{{ asset('vid/bg.mp4') }}" type="video/mp4">
                         Your browser does not support the video tag.
                     </video>
-                    <div x-show="!play" class="my-[10px] min-h-[1039px] w-full animate-pulse bg-gray-500"></div>
-
-                    <div role="status" x-show="!play"
-                        class="absolute top-0 flex h-full w-full animate-pulse items-center justify-center rounded-lg bg-gray-300 dark:bg-gray-700">
-                        <svg class="h-10 w-10 text-gray-200 dark:text-gray-600" aria-hidden="true"
-                            xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
-                            <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z" />
-                            <path
-                                d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM9 13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2Zm4 .382a1 1 0 0 1-1.447.894L10 13v-2l1.553-1.276a1 1 0 0 1 1.447.894v2.764Z" />
-                        </svg>
-                        <span class="sr-only">Loading...</span>
+                    <div x-show="svgLoaded" class="animate-fade absolute left-0 top-0 z-30 h-[120%] w-full bg-black/40">
                     </div>
-                </div>
-                <div class="bottom-15 absolute left-24 rounded-tr-2xl bg-transparent px-2 py-2 text-white"
-                    x-data="{ shown: false }" x-intersect="shown = true">
-                    <div x-show="shown" class="text-center text-8xl font-bold">
-                        <p class="animate-fade tracking-widest">FAKULTAS</p>
-                        <p class="animate-delay-500 animate-fade tracking-widest">TEKNIK</p>
+                    <div class="absolute inset-0 z-0 flex items-center justify-center">
+                        <div class="rounded-tr-2xl bg-transparent px-2 py-2 text-white" x-data="{ shown: false }"
+                            x-intersect="shown = true">
+                            <div x-show="shown" class="text-center sm:text-8xl text-4xl font-bold">
+                                <p class="animate-fade tracking-widest">FAKULTAS</p>
+                                <p class="animate-delay-200 animate-fade tracking-widest">TEKNIK</p>
+                            </div>
+                            <p x-show="shown" class="animate-delay-400 animate-fade max-w-xl text-center sm:text-xl text-sm">
+                                {{ __('home.welcome') }}
+                            </p>
+                        </div>
                     </div>
-                    <p x-show="shown" class="animate-delay-1000 animate-fade max-w-xl text-center text-xl">
-                        {{ __('home.welcome') }}
-                    </p>
                 </div>
             </div>
             <div class="h-2 w-full"></div>
-            <div class="mb-15 mt-20 h-[4px] w-full max-w-[var(--max-width)] overflow-hidden rounded-full px-[10%]"
+            <div class="mb-[3%] mt-[4%] h-[4px] w-full max-w-[var(--max-width)] overflow-hidden rounded-full px-[10%]"
                 x-data="{ shown: false }" x-intersect="shown = true">
                 <div x-show="shown" x-transition:enter="transition-all duration-700 ease-out"
                     x-transition:enter-start="w-0 opacity-0" x-transition:enter-end="w-full opacity-100"
@@ -222,41 +211,29 @@ new #[Layout('components.layouts.home')] class extends Component {
 
             <div class="text-primary">.</div>
         </div>
-        <style>
-            .mask-image {
-                mask-image: url('{{ asset('img/mask.svg') }}');
-                mask-size: contain;
-                mask-repeat: no-repeat;
-                mask-position: center;
 
-                /* Untuk compatibility Safari */
-                -webkit-mask-image: url('{{ asset('img/mask.svg') }}');
-                -webkit-mask-size: contain;
-                -webkit-mask-repeat: no-repeat;
-                -webkit-mask-position: center;
-            }
-        </style>
     </section>
 
-    <section class="bg-primary relative w-full overflow-hidden pb-16 pt-16 transition-all" x-data="{ animate: false }"
-        x-intersect:enter="setTimeout(()=>{
+    <section class="bg-primary linked-1:py-16 relative w-full overflow-hidden py-10 transition-all"
+        x-data="{ animate: false }" x-intersect:enter="setTimeout(()=>{
             animate=true
         }, 250)">
         <img class="absolute left-0 top-0 -z-0 h-full w-full object-cover" src="{{ asset('img/bg-linked.svg') }}" />
         <div class="relative z-10 mx-auto max-w-7xl px-10">
             <div class="text-center">
                 <h2 x-data="{ hoverS: false }"
-                    class="text-accent-white after:bg-accent-white/60 relative inline-block text-4xl font-bold after:absolute after:-bottom-1 after:left-1/2 after:block after:h-[4px] after:translate-x-[-50%] after:rounded-full after:transition-all after:duration-[1500ms]"
+                    class="text-accent-white after:bg-accent-white/60 linked-1:text-4xl relative inline-block text-2xl font-bold after:absolute after:-bottom-1 after:left-1/2 after:block after:h-[4px] after:translate-x-[-50%] after:rounded-full after:transition-all after:duration-[1500ms]"
                     x-intersect:enter="hoverS=true" x-intersect:leave="hoverS=false"
                     x-bind:class="hoverS ? 'after:w-full' : 'after:w-1/4'">
                     {{ __('home.important_links') }}
                 </h2>
             </div>
-            <div class="mx-auto mt-14 flex max-w-[--max-width] flex-wrap items-center justify-center gap-x-5 gap-y-5">
-                <div class="flex w-[350px] flex-col items-center"
+            <div
+                class="linked-1:mt-14 linked-1:gap-x-5 mx-auto mt-8 flex max-w-[--max-width] flex-wrap items-center justify-center gap-x-2 gap-y-5">
+                <div class="linked-1:w-[350px] flex w-[300px] flex-col items-center"
                     x-bind:class="animate ? 'animate-fade-up animate-delay-200' : 'opacity-0'">
                     <div
-                        class="bg-accent-white border-primary hover:bg-primary-light border-primary hover:border-accent-white group flex w-full cursor-pointer flex-row items-center justify-center gap-x-2 rounded-xl border-2 p-5 text-center transition-colors">
+                        class="bg-accent-white border-primary hover:bg-primary-light border-primary hover:border-accent-white linked-1:gap-x-2 linked-1:p-5 group flex w-full cursor-pointer flex-row items-center justify-center gap-x-1 rounded-xl border-2 p-3 text-center transition-colors">
                         <svg class="group-hover:text-accent-white text-primary-light h-[35px] w-[35px] transition-colors"
                             fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -267,16 +244,17 @@ new #[Layout('components.layouts.home')] class extends Component {
                                 </path>
                             </g>
                         </svg>
-                        <p class="group-hover:text-accent-white text-primary-light text-lg font-bold transition-colors">
+                        <p
+                            class="group-hover:text-accent-white text-primary-light linked-1:text-lg text-base font-bold transition-colors">
                             Governnment Public
                             Relations</p>
                     </div>
                 </div>
 
-                <div class="flex w-[350px] flex-col items-center"
+                <div class="linked-1:w-[350px] flex w-[300px] flex-col items-center"
                     x-bind:class="animate ? 'animate-fade-up animate-delay-400' : 'opacity-0'">
                     <div
-                        class="bg-accent-white border-primary hover:bg-primary-light border-primary hover:border-accent-white group flex w-full cursor-pointer flex-row items-center justify-center gap-x-2 rounded-xl border-2 p-5 text-center transition-colors">
+                        class="bg-accent-white border-primary hover:bg-primary-light border-primary hover:border-accent-white linked-1:gap-x-2 linked-1:p-5 group flex w-full cursor-pointer flex-row items-center justify-center gap-x-1 rounded-xl border-2 p-3 text-center transition-colors">
                         <svg class="group-hover:text-accent-white text-primary-light h-[35px] w-[35px] transition-colors"
                             viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -293,15 +271,15 @@ new #[Layout('components.layouts.home')] class extends Component {
                             </g>
                         </svg>
                         <p
-                            class="group-hover:text-accent-white text-primary-light text-lg font-bold transition-colors">
+                            class="group-hover:text-accent-white text-primary-light linked-1:text-lg text-base font-bold transition-colors">
                             FT Care</p>
                     </div>
                 </div>
 
-                <div class="flex w-[350px] flex-col items-center"
+                <div class="linked-1:w-[350px] flex w-[300px] flex-col items-center"
                     x-bind:class="animate ? 'animate-fade-up animate-delay-600' : 'opacity-0'">
                     <div
-                        class="bg-accent-white border-primary hover:bg-primary-light border-primary hover:border-accent-white group flex w-full cursor-pointer flex-row items-center justify-center gap-x-2 rounded-xl border-2 p-5 text-center transition-colors">
+                        class="bg-accent-white border-primary hover:bg-primary-light border-primary hover:border-accent-white linked-1:gap-x-2 linked-1:p-5 group flex w-full cursor-pointer flex-row items-center justify-center gap-x-1 rounded-xl border-2 p-3 text-center transition-colors">
                         <svg class="group-hover:text-accent-white text-primary-light h-[35px] w-[35px] transition-colors"
                             viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg"
                             xmlns:xlink="http://www.w3.org/1999/xlink" fill="currentColor">
@@ -321,15 +299,15 @@ new #[Layout('components.layouts.home')] class extends Component {
                             </g>
                         </svg>
                         <p
-                            class="group-hover:text-accent-white text-primary-light text-lg font-bold transition-colors">
+                            class="group-hover:text-accent-white text-primary-light linked-1:text-lg text-base font-bold transition-colors">
                             {{ __('home.money_report') }}</p>
                     </div>
                 </div>
 
-                <div class="flex w-[350px] flex-col items-center"
+                <div class="linked-1:w-[350px] flex w-[300px] flex-col items-center"
                     x-bind:class="animate ? 'animate-fade-up animate-delay-800' : 'opacity-0'">
                     <div
-                        class="bg-accent-white border-primary hover:bg-primary-light border-primary hover:border-accent-white group flex w-full cursor-pointer flex-row items-center justify-center gap-x-2 rounded-xl border-2 p-5 text-center transition-colors">
+                        class="bg-accent-white border-primary hover:bg-primary-light border-primary hover:border-accent-white linked-1:gap-x-2 linked-1:p-5 group flex w-full cursor-pointer flex-row items-center justify-center gap-x-1 rounded-xl border-2 p-3 text-center transition-colors">
                         <svg class="group-hover:text-accent-white text-primary-light h-[35px] w-[35px] transition-colors"
                             viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -347,15 +325,15 @@ new #[Layout('components.layouts.home')] class extends Component {
                             </g>
                         </svg>
                         <p
-                            class="group-hover:text-accent-white text-primary-light text-lg font-bold transition-colors">
+                            class="group-hover:text-accent-white text-primary-light linked-1:text-lg text-base font-bold transition-colors">
                             PLD</p>
                     </div>
                 </div>
 
-                <div class="flex w-[350px] flex-col items-center"
+                <div class="linked-1:w-[350px] flex w-[300px] flex-col items-center"
                     x-bind:class="animate ? 'animate-fade-up animate-delay-1000' : 'opacity-0'">
                     <div
-                        class="bg-accent-white border-primary hover:bg-primary-light border-primary hover:border-accent-white group flex w-full cursor-pointer flex-row items-center justify-center gap-x-2 rounded-xl border-2 p-5 text-center transition-colors">
+                        class="bg-accent-white border-primary hover:bg-primary-light border-primary hover:border-accent-white linked-1:gap-x-2 linked-1:p-5 group flex w-full cursor-pointer flex-row items-center justify-center gap-x-1 rounded-xl border-2 p-3 text-center transition-colors">
                         <svg class="group-hover:text-accent-white text-primary-light h-[35px] w-[35px] transition-colors"
                             viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -376,15 +354,15 @@ new #[Layout('components.layouts.home')] class extends Component {
                             </g>
                         </svg>
                         <p
-                            class="group-hover:text-accent-white text-primary-light text-lg font-bold transition-colors">
+                            class="group-hover:text-accent-white text-primary-light linked-1:text-lg text-base font-bold transition-colors">
                             PPID</p>
                     </div>
                 </div>
 
-                <div class="flex w-[350px] flex-col items-center"
+                <div class="linked-1:w-[350px] flex w-[300px] flex-col items-center"
                     x-bind:class="animate ? 'animate-fade-up animate-delay-1200' : 'opacity-0'">
                     <div
-                        class="bg-accent-white border-primary hover:bg-primary-light border-primary hover:border-accent-white group flex w-full cursor-pointer flex-row items-center justify-center gap-x-2 rounded-xl border-2 p-5 text-center transition-colors">
+                        class="bg-accent-white border-primary hover:bg-primary-light border-primary hover:border-accent-white linked-1:gap-x-2 linked-1:p-5 group flex w-full cursor-pointer flex-row items-center justify-center gap-x-1 rounded-xl border-2 p-3 text-center transition-colors">
 
                         <svg class="group-hover:text-accent-white text-primary-light h-[35px] w-[35px] transition-colors"
                             fill="currentColor" viewBox="-1 0 19 19" xmlns="http://www.w3.org/2000/svg"
@@ -398,15 +376,15 @@ new #[Layout('components.layouts.home')] class extends Component {
                             </g>
                         </svg>
                         <p
-                            class="group-hover:text-accent-white text-primary-light text-lg font-bold transition-colors">
+                            class="group-hover:text-accent-white text-primary-light linked-1:text-lg text-base font-bold transition-colors">
                             Merdeka Belajar</p>
                     </div>
                 </div>
 
-                <div class="flex w-[350px] flex-col items-center"
+                <div class="linked-1:w-[350px] flex w-[300px] flex-col items-center"
                     x-bind:class="animate ? 'animate-fade-up animate-delay-1400' : 'opacity-0'">
                     <div
-                        class="bg-accent-white border-primary hover:bg-primary-light border-primary hover:border-accent-white group flex w-full cursor-pointer flex-row items-center justify-center gap-x-2 rounded-xl border-2 p-5 text-center transition-colors">
+                        class="bg-accent-white border-primary hover:bg-primary-light border-primary hover:border-accent-white linked-1:gap-x-2 linked-1:p-5 group flex w-full cursor-pointer flex-row items-center justify-center gap-x-1 rounded-xl border-2 p-3 text-center transition-colors">
 
                         <svg class="group-hover:text-accent-white text-primary-light h-[35px] w-[35px] transition-colors"
                             fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52"
@@ -426,7 +404,7 @@ new #[Layout('components.layouts.home')] class extends Component {
                             </g>
                         </svg>
                         <p
-                            class="group-hover:text-accent-white text-primary-light text-lg font-bold transition-colors">
+                            class="group-hover:text-accent-white text-primary-light linked-1:text-lg text-base font-bold transition-colors">
                             lapor.go.id</p>
                     </div>
                 </div>
@@ -434,19 +412,19 @@ new #[Layout('components.layouts.home')] class extends Component {
         </div>
     </section>
 
-    <section class="pt-20">
+    <section class="linked-1:pt-20 pt-10">
         <div class="text-center">
             <h2 x-data="{ hoverS: false }"
-                class="text-primary relative inline-block text-4xl font-bold after:absolute after:-bottom-1 after:left-1/2 after:block after:h-[4px] after:translate-x-[-50%] after:rounded-full after:bg-green-400 after:transition-all after:duration-[1500ms]"
+                class="text-primary linked-1:text-4xl relative inline-block text-2xl font-bold after:absolute after:-bottom-1 after:left-1/2 after:block after:h-[4px] after:translate-x-[-50%] after:rounded-full after:bg-green-400 after:transition-all after:duration-[1500ms]"
                 x-intersect:enter="hoverS=true" x-intersect:leave="hoverS=false"
                 x-bind:class="hoverS ? 'after:w-full' : 'after:w-1/4'">
                 FTnews
             </h2>
         </div>
-        <div class="mx-auto mt-14 max-w-[--max-width]" x-data="{ scrolled: false }">
-            <template x-if="!news || (Array.isArray(news) && news.length === 0)">
-                <div class="flex flex-row items-center justify-center gap-x-7 px-10">
-                    <template x-for="i in [1,2,3]" :key="i">
+        <div class="linked-1:mt-14 mx-auto mt-8 max-w-[--max-width]" x-data="{ scrolled: false }">
+            <template x-cloak x-if="!news || (Array.isArray(news) && news.length === 0)">
+                <div class="flex flex-row flex-wrap items-center justify-center gap-x-7 gap-y-7 px-10">
+                    <template x-cloak x-for="i in [1,2,3]" :key="i">
                         <div class="animate-pulse">
                             <div
                                 class="flex h-64 w-[405px] items-center justify-center rounded-sm bg-gray-300 dark:bg-gray-700">
@@ -461,39 +439,42 @@ new #[Layout('components.layouts.home')] class extends Component {
                     </template>
                 </div>
             </template>
-            <template x-if="news && Array.isArray(news) && news.length > 0">
-                <div class="mx-auto flex flex-row flex-wrap items-start justify-center gap-x-7 px-10"
+            <template x-cloak x-if="news && Array.isArray(news) && news.length > 0">
+                <div class="mx-auto flex flex-row flex-wrap items-start justify-center gap-x-7 gap-y-7 ftnews-1:px-5 px-0"
                     x-intersect="scrolled=true">
-                    <template x-for="(data, i) in news" :key="i">
-                        <div class="group w-[405px] cursor-pointer"
+                    <template x-cloak x-for="(data, i) in news" :key="i">
+                        <div class="group ftnews-1:w-[405px] w-full cursor-pointer"
                             x-bind:class="scrolled ? `animate-delay-${i*2}00 animate-fade` : 'opacity-0'"
                             @click="goToNews(data.id)">
                             <div
-                                class="flex h-64 w-[405px] items-center justify-center overflow-hidden rounded-sm bg-gray-300">
+                                class="flex h-64 w-full items-center justify-center overflow-hidden rounded-sm bg-gray-300">
                                 <img :src="data.image" alt="data.title"
                                     class="h-full w-full object-cover transition-all group-hover:scale-125" />
                             </div>
-                            <p class="text-primary-dark group-hover:text-primary-light my-2 line-clamp-2 text-xl"
-                                x-text="data.title"></p>
-                            <div
-                                class="text-primary-dark group-hover:text-primary-light flex flex-row items-center justify-start gap-x-1">
-                                <svg class="h-[25px] w-[25px]" viewBox="0 0 24 24" fill="none"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                                    <g id="SVGRepo_iconCarrier">
-                                        <path
-                                            d="M8 12C7.44772 12 7 12.4477 7 13C7 13.5523 7.44772 14 8 14H16C16.5523 14 17 13.5523 17 13C17 12.4477 16.5523 12 16 12H8Z"
-                                            fill="currentColor"></path>
-                                        <path
-                                            d="M7 17C7 16.4477 7.44772 16 8 16H12C12.5523 16 13 16.4477 13 17C13 17.5523 12.5523 18 12 18H8C7.44772 18 7 17.5523 7 17Z"
-                                            fill="currentColor"></path>
-                                        <path fill-rule="evenodd" clip-rule="evenodd"
-                                            d="M8 3C8 2.44772 7.55228 2 7 2C6.44772 2 6 2.44772 6 3V4.10002C3.71776 4.56329 2 6.58104 2 9V17C2 19.7614 4.23858 22 7 22H17C19.7614 22 22 19.7614 22 17V9C22 6.58104 20.2822 4.56329 18 4.10002V3C18 2.44772 17.5523 2 17 2C16.4477 2 16 2.44772 16 3V4H8V3ZM20 10H4V17C4 18.6569 5.34315 20 7 20H17C18.6569 20 20 18.6569 20 17V10ZM4.17071 8C4.58254 6.83481 5.69378 6 7 6H17C18.3062 6 19.4175 6.83481 19.8293 8H4.17071Z"
-                                            fill="currentColor"></path>
-                                    </g>
-                                </svg>
-                                <p class="text-sm" x-text="formatDate(data.created_at)"></p>
+                            <div class="px-2">
+                                <p class="text-primary-dark group-hover:text-primary-light my-2 line-clamp-2 text-xl"
+                                    x-text="data.title"></p>
+                                <div
+                                    class="text-primary-dark group-hover:text-primary-light flex flex-row items-center justify-start gap-x-1">
+                                    <svg class="h-[25px] w-[25px]" viewBox="0 0 24 24" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round">
+                                        </g>
+                                        <g id="SVGRepo_iconCarrier">
+                                            <path
+                                                d="M8 12C7.44772 12 7 12.4477 7 13C7 13.5523 7.44772 14 8 14H16C16.5523 14 17 13.5523 17 13C17 12.4477 16.5523 12 16 12H8Z"
+                                                fill="currentColor"></path>
+                                            <path
+                                                d="M7 17C7 16.4477 7.44772 16 8 16H12C12.5523 16 13 16.4477 13 17C13 17.5523 12.5523 18 12 18H8C7.44772 18 7 17.5523 7 17Z"
+                                                fill="currentColor"></path>
+                                            <path fill-rule="evenodd" clip-rule="evenodd"
+                                                d="M8 3C8 2.44772 7.55228 2 7 2C6.44772 2 6 2.44772 6 3V4.10002C3.71776 4.56329 2 6.58104 2 9V17C2 19.7614 4.23858 22 7 22H17C19.7614 22 22 19.7614 22 17V9C22 6.58104 20.2822 4.56329 18 4.10002V3C18 2.44772 17.5523 2 17 2C16.4477 2 16 2.44772 16 3V4H8V3ZM20 10H4V17C4 18.6569 5.34315 20 7 20H17C18.6569 20 20 18.6569 20 17V10ZM4.17071 8C4.58254 6.83481 5.69378 6 7 6H17C18.3062 6 19.4175 6.83481 19.8293 8H4.17071Z"
+                                                fill="currentColor"></path>
+                                        </g>
+                                    </svg>
+                                    <p class="text-sm" x-text="formatDate(data.created_at)"></p>
+                                </div>
                             </div>
                         </div>
                     </template>
@@ -504,25 +485,30 @@ new #[Layout('components.layouts.home')] class extends Component {
         </div>
     </section>
 
-    <section class="relative w-full">
-        <img class="absolute left-0 top-0 z-10 h-full w-full object-cover opacity-20"
+    <section class="relative w-full" x-data="{
+        height: 0,
+    }">
+        <img class="absolute left-0 top-0 z-10 hidden h-full w-full object-cover opacity-20 xl:block"
             src="{{ asset('img/bg-poly.svg') }}" />
         <div class="bg-primary/10 absolute left-0 right-0 h-full w-full"></div>
-        <div class="bg-primary absolute left-1/2 right-0 top-0 z-0 h-full w-[405px] -translate-x-1/2 transform"></div>
+        <div class="bg-primary absolute left-1/2 right-0 top-0 z-0 w-[405px] -translate-x-1/2 transform xl:h-full">
+        </div>
 
-        <div class="relative z-20 mx-auto my-14 flex max-w-[--max-width] flex-row justify-center gap-x-7">
-            <div class="w-[405px] py-10" x-data="{ scrolled: false }" x-intersect="scrolled = true">
-                <div class="text-left">
+        <div
+            class="relative z-20 mx-auto mt-14 flex max-w-[--max-width] flex-wrap items-center justify-center gap-x-7 xl:items-start">
+            <div class="event-1:w-[405px] w-[500px] px-5 py-10" x-data="{ scrolled: false }"
+                x-intersect="scrolled = true">
+                <div class="event-1:text-left text-center">
                     <h2 x-data="{ hoverS: false }"
-                        class="text-primary relative inline-block text-3xl font-bold after:absolute after:-bottom-1 after:left-1/2 after:block after:h-[4px] after:translate-x-[-50%] after:rounded-full after:bg-green-400 after:transition-all after:duration-[1500ms]"
+                        class="text-primary linked-1:text-3xl relative inline-block text-2xl font-bold after:absolute after:-bottom-1 after:left-1/2 after:block after:h-[4px] after:translate-x-[-50%] after:rounded-full after:bg-green-400 after:transition-all after:duration-[1500ms]"
                         x-intersect:enter="hoverS=true" x-intersect:leave="hoverS=false"
                         x-bind:class="hoverS ? 'after:w-full' : 'after:w-1/4'">
                         MBKM News
                     </h2>
                 </div>
                 <div class="mt-7 flex flex-col gap-y-5">
-                    <template x-if="!mbkm || (Array.isArray(mbkm) && mbkm.length == 0)">
-                        <template x-for="i in [1,2,3,4,5]" :key="i">
+                    <template x-cloak x-if="!mbkm || (Array.isArray(mbkm) && mbkm.length == 0)">
+                        <template x-cloak x-for="i in [1,2,3,4,5]" :key="i">
                             <div class="">
                                 <div class="mt-2 h-5 max-w-[250px] rounded-full bg-gray-200 dark:bg-gray-700"></div>
                                 <div class="mt-2 h-5 w-full rounded-full bg-gray-200 dark:bg-gray-700"></div>
@@ -531,8 +517,8 @@ new #[Layout('components.layouts.home')] class extends Component {
                         </template>
                     </template>
 
-                    <template x-if="mbkm && Array.isArray(mbkm) && mbkm.length > 0">
-                        <template x-for="(data, i) in mbkm" :key="i">
+                    <template x-cloak x-if="mbkm && Array.isArray(mbkm) && mbkm.length > 0">
+                        <template x-cloak x-for="(data, i) in mbkm" :key="i">
                             <div class="cursor-pointer transition-all hover:translate-x-10 hover:scale-110"
                                 @click="goToNews(data.id)"
                                 x-bind:class="scrolled ? `animate-fade-right animate-delay-${i*2}00 opacity-100` : 'opacity-0'">
@@ -543,19 +529,22 @@ new #[Layout('components.layouts.home')] class extends Component {
                     </template>
                 </div>
             </div>
-            <div class="w-[405px] px-5 py-10" x-data="{ scrolled: false }" x-intersect="scrolled = true">
-                <div class="text-left">
+            <div class="bg-primary event-1:w-[405px] w-[500px] px-5 py-10 xl:bg-transparent" x-data="{ scrolled: false }"
+                x-intersect="scrolled = true">
+                <img class="absolute left-0 top-0 z-10 block h-full w-full object-cover opacity-10 xl:hidden"
+                    src="{{ asset('img/bg-poly.svg') }}" />
+                <div class="event-1:text-left relative z-20 text-center">
                     <h2 x-data="{ hoverS: false }"
-                        class="text-accent-white after:bg-accent-white/60 relative inline-block text-3xl font-bold after:absolute after:-bottom-1 after:left-1/2 after:block after:h-[4px] after:translate-x-[-50%] after:rounded-full after:transition-all after:duration-[1500ms]"
+                        class="text-accent-white after:bg-accent-white/60 linked-1:text-3xl relative inline-block text-2xl font-bold after:absolute after:-bottom-1 after:left-1/2 after:block after:h-[4px] after:translate-x-[-50%] after:rounded-full after:transition-all after:duration-[1500ms]"
                         x-intersect:enter="hoverS=true" x-intersect:leave="hoverS=false"
                         x-bind:class="hoverS ? 'after:w-full' : 'after:w-1/4'">
                         FT Events
                     </h2>
                 </div>
-                <div class="mt-7 flex flex-col gap-y-5">
-                    <template x-if="!events || (Array.isArray(events) && events.length == 0)">
-                        <template x-for="i in [1,2,3,4,5]" :key="i">
-                            <div class="">
+                <div class="relative z-20 mt-7 flex flex-col gap-y-5">
+                    <template x-cloak x-if="!events || (Array.isArray(events) && events.length == 0)">
+                        <template x-cloak x-for="i in [1,2,3,4,5]" :key="i">
+                            <div>
                                 <div class="mt-2 h-5 max-w-[250px] rounded-full bg-gray-200 dark:bg-gray-700"></div>
                                 <div class="mt-2 h-5 w-full rounded-full bg-gray-200 dark:bg-gray-700"></div>
                                 <div class="mt-2 h-5 w-full rounded-full bg-gray-200 dark:bg-gray-700"></div>
@@ -563,8 +552,8 @@ new #[Layout('components.layouts.home')] class extends Component {
                         </template>
                     </template>
 
-                    <template x-if="events && Array.isArray(events) && events.length > 0">
-                        <template x-for="(data, i) in events" :key="i">
+                    <template x-cloak x-if="events && Array.isArray(events) && events.length > 0">
+                        <template x-cloak x-for="(data, i) in events" :key="i">
                             <div class="flex cursor-pointer flex-row items-start gap-x-2 transition-all hover:translate-x-2 hover:scale-110"
                                 @click="goToNews(data.id)"
                                 x-bind:class="scrolled ? `animate-fade-right animate-delay-${i*2}00 opacity-100` : 'opacity-0'">
@@ -581,18 +570,19 @@ new #[Layout('components.layouts.home')] class extends Component {
                     </template>
                 </div>
             </div>
-            <div class="w-[405px] py-10" x-data="{ scrolled: false }" x-intersect="scrolled = true">
-                <div class="text-left">
+            <div class="event-1:w-[405px] w-[500px] px-5 py-10" x-data="{ scrolled: false }"
+                x-intersect="scrolled = true">
+                <div class="event-1:text-left text-center">
                     <h2 x-data="{ hoverS: false }"
-                        class="text-primary relative inline-block text-3xl font-bold after:absolute after:-bottom-1 after:left-1/2 after:block after:h-[4px] after:translate-x-[-50%] after:rounded-full after:bg-green-400 after:transition-all after:duration-[1500ms]"
+                        class="text-primary linked-1:text-3xl relative inline-block text-2xl font-bold after:absolute after:-bottom-1 after:left-1/2 after:block after:h-[4px] after:translate-x-[-50%] after:rounded-full after:bg-green-400 after:transition-all after:duration-[1500ms]"
                         x-intersect:enter="hoverS=true" x-intersect:leave="hoverS=false"
                         x-bind:class="hoverS ? 'after:w-full' : 'after:w-1/4'">
                         Pengumuman FT
                     </h2>
                 </div>
                 <div class="mt-7 flex flex-col gap-y-5">
-                    <template x-if="!pengumuman || (Array.isArray(pengumuman) && pengumuman.length == 0)">
-                        <template x-for="i in [1,2,3,4,5]" :key="i">
+                    <template x-cloak x-if="!pengumuman || (Array.isArray(pengumuman) && pengumuman.length == 0)">
+                        <template x-cloak x-for="i in [1,2,3,4,5]" :key="i">
                             <div class="">
                                 <div class="mt-2 h-5 max-w-[250px] rounded-full bg-gray-200 dark:bg-gray-700"></div>
                                 <div class="mt-2 h-5 w-full rounded-full bg-gray-200 dark:bg-gray-700"></div>
@@ -601,8 +591,8 @@ new #[Layout('components.layouts.home')] class extends Component {
                         </template>
                     </template>
 
-                    <template x-if="pengumuman && Array.isArray(pengumuman) && pengumuman.length > 0">
-                        <template x-for="(data, i) in pengumuman" :key="i">
+                    <template x-cloak x-if="pengumuman && Array.isArray(pengumuman) && pengumuman.length > 0">
+                        <template x-cloak x-for="(data, i) in pengumuman" :key="i">
                             <div class="cursor-pointer transition-all hover:translate-x-10 hover:scale-110"
                                 @click="goToNews(data.id)"
                                 x-bind:class="scrolled ? `animate-fade-right animate-delay-${i*2}00 opacity-100` : 'opacity-0'">
@@ -637,6 +627,7 @@ new #[Layout('components.layouts.home')] class extends Component {
                 if (this.stopRun) return;
                 this.stopRun = true;
                 this.$wire.running();
+
             },
             changeDate(createdAt) {
                 const formattedTime = moment(createdAt).fromNow();

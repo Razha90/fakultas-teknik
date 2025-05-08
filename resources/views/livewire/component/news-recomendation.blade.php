@@ -8,7 +8,7 @@ new class extends Component {
     public function search()
     {
         try {
-            $this->data = News::with('categories', 'user')->orderBy('created_at', 'desc')->orderBy('likes', 'desc')->limit(4)->get()->toArray();
+            $this->data = News::with('categories', 'user')->orderBy('created_at', 'desc')->orderBy('views', 'desc')->limit(4)->get()->toArray();
         } catch (\Throwable $th) {
             $this->dispatch('failed', [
                 'message' => __('news.error'),

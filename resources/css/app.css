@@ -18,7 +18,15 @@
     --color-secondary-accent: #141622;
 
     --max-width: 1920px;
-    --breakpoint-extra: 1920px;
+    --breakpoint-nav-1: 1083px;
+    --breakpoint-nav-2: 640px;
+    --breakpoint-nav-3: 550px;
+    --breakpoint-ftnews-1: 408px;
+
+
+    --breakpoint-event-1: 838px;
+    --breakpoint-linked-1: 799px;
+
     --font-merriweather: 'Merriweather', serif;
     --font-tagesschrift: 'Tagesschrift', system-ui;
 

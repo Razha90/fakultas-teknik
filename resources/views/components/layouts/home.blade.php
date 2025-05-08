@@ -128,7 +128,7 @@
         </div>
     </div>
 
-    <nav x-cloak x-data="{ shown: false,haveOne:'' }" x-on:navigation.window="(event) => {
+    <nav x-cloak x-data="{ shown: false, haveOne: '' }" x-on:navigation.window="(event) => {
         shown = true;
     }"
         x-transition:enter="transition ease-out duration-300"
@@ -137,25 +137,25 @@
         x-transition:leave="transition ease-in duration-300" x-transition:leave-start="translate-x-0 opacity-100"
         x-transition:leave-end="translate-x-full opacity-0"
         class="bg-secondary-accent/30 fixed inset-0 z-50 flex justify-end" x-show="shown">
-        <div class="bg-secondary-accent/80 relative h-full overflow-y-auto max-w-[300px]" @click.away="shown=false">
+        <div class="bg-secondary-accent/80 relative h-full max-w-[300px] overflow-y-auto" @click.away="shown=false">
             <div>
                 <div class="text-accent-white mt-16 pl-4 pr-5 text-xl">
                     <div class="" x-data="{ height: '' }">
                         <div class="group flex cursor-pointer flex-row items-center justify-between gap-x-1"
-                             @click="haveOne='about'; height = $refs.menu.scrollHeight;">
-                            <div x-bind:class=" haveOne=='about' ? 'text-secondary-warn' : 'text-accent-white'"
+                            @click="haveOne = haveOne === 'about' ? '' : 'about'; height = $refs.menu.scrollHeight;">
+                            <div x-bind:class="haveOne == 'about' ? 'text-secondary-warn' : 'text-accent-white'"
                                 class="group-hover:text-secondary-warn transition-all">
                                 {{ __('nav.about') }}</div>
                             <div class="flex flex-row">
                                 <div class="group-hover:bg-secondary-warn h-[2px] w-[10px] rounded-full transition-all"
-                                    x-bind:class=" haveOne=='about' ? 'rotate-0 bg-secondary-warn' : 'rotate-45 bg-accent-white'">
+                                    x-bind:class="haveOne == 'about' ? 'rotate-0 bg-secondary-warn' : 'rotate-45 bg-accent-white'">
                                 </div>
                                 <div class="bg-accent-white group-hover:bg-secondary-warn relative right-1 h-[2px] w-[10px] rounded-full transition-all"
-                                    x-bind:class=" haveOne=='about' ? 'rotate-0 bg-secondary-warn' : '-rotate-45 bg-accent-white'">
+                                    x-bind:class="haveOne == 'about' ? 'rotate-0 bg-secondary-warn' : '-rotate-45 bg-accent-white'">
                                 </div>
                             </div>
                         </div>
-                        <ul x-ref="menu" x-bind:style=" haveOne == 'about' ? `height: ${height}px` : 'height: 0px'"
+                        <ul x-ref="menu" x-bind:style="haveOne == 'about' ? `height: ${height}px` : 'height: 0px'"
                             class="mt-2 space-y-3 overflow-hidden pl-3 transition-all duration-300 ease-in-out">
                             <li class="group flex cursor-pointer flex-row items-center gap-x-5">
                                 <div
@@ -263,20 +263,20 @@
                 <div class="text-accent-white mt-3 pl-4 pr-5 text-xl">
                     <div class="" x-data="{ height: '' }">
                         <div class="group flex cursor-pointer flex-row items-center justify-between gap-x-1"
-                             @click="height = $refs.menu.scrollHeight; haveOne='jurusan'">
-                            <div x-bind:class="haveOne=='jurusan' ? 'text-secondary-warn' : 'text-accent-white'"
+                            @click="height = $refs.menu.scrollHeight; haveOne = haveOne === 'jurusan' ? '' : 'jurusan'">
+                            <div x-bind:class="haveOne == 'jurusan' ? 'text-secondary-warn' : 'text-accent-white'"
                                 class="group-hover:text-secondary-warn transition-all">
                                 {{ __('nav.jurusan_dan_program_studi') }}</div>
                             <div class="flex flex-row">
                                 <div class="group-hover:bg-secondary-warn h-[2px] w-[10px] rounded-full transition-all"
-                                    x-bind:class="haveOne=='jurusan' ? 'rotate-0 bg-secondary-warn' : 'rotate-45 bg-accent-white'">
+                                    x-bind:class="haveOne == 'jurusan' ? 'rotate-0 bg-secondary-warn' : 'rotate-45 bg-accent-white'">
                                 </div>
                                 <div class="bg-accent-white group-hover:bg-secondary-warn relative right-1 h-[2px] w-[10px] rounded-full transition-all"
-                                    x-bind:class="haveOne=='jurusan' ? 'rotate-0 bg-secondary-warn' : '-rotate-45 bg-accent-white'">
+                                    x-bind:class="haveOne == 'jurusan' ? 'rotate-0 bg-secondary-warn' : '-rotate-45 bg-accent-white'">
                                 </div>
                             </div>
                         </div>
-                        <ul x-ref="menu" x-bind:style="haveOne=='jurusan' ? `height: ${height}px` : 'height: 0px'"
+                        <ul x-ref="menu" x-bind:style="haveOne == 'jurusan' ? `height: ${height}px` : 'height: 0px'"
                             class="mt-2 space-y-3 overflow-hidden pl-3 transition-all duration-300 ease-in-out">
                             <li class="group flex cursor-pointer flex-row items-center gap-x-5">
                                 <div
@@ -406,11 +406,140 @@
                     </div>
                 </div>
             </div>
+            <div class="nav-3:hidden animate-fade flex w-full items-center justify-center gap-x-5">
+                <div class="nav-2:py-10 hover:text-secondary-warn ml-3 block cursor-pointer py-5 text-white"
+                    @click="$dispatch('searching')">
+                    <svg class="h-[25px] w-[25px] transition-all" viewBox="0 0 24 24" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                        <g id="SVGRepo_iconCarrier">
+                            <path
+                                d="M11 6C13.7614 6 16 8.23858 16 11M16.6588 16.6549L21 21M19 11C19 15.4183 15.4183 19 11 19C6.58172 19 3 15.4183 3 11C3 6.58172 6.58172 3 11 3C15.4183 3 19 6.58172 19 11Z"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                            </path>
+                        </g>
+                    </svg>
+                </div>
+                <div x-cloak x-data="{ locale: '{{ Cookie::get('locale', 'id') }}', lang_id: '{{ route('change.lang', ['lang' => 'id']) }}', lang_en: '{{ route('change.lang', ['lang' => 'en']) }}', enter: false, clicked: false }"
+                    @click="goToPage(locale == 'id' ? lang_en : lang_id); clicked=true"
+                    class="nav-2:py-10 animate-fade flex cursor-pointer items-center justify-center py-5"
+                    @mouseenter="enter = true" @mouseleave="if (!clicked) enter = false">
+                    <template x-cloak x-if="locale == 'en'">
+                        <div class="relative flex flex-row items-center gap-x-1 rounded-full bg-green-400">
+                            <p class="absolute left-2 text-base">Id</p>
+                            <div class="h-[25px] w-[25px] overflow-hidden rounded-full shadow-2xl transition-all"
+                                :class="{
+                                    'translate-x-[28px]': enter,
+                                    'translate-x-[2px]': !enter
+                                }">
+
+                                <svg class="w-[35px]" x-show="!enter" xmlns="http://www.w3.org/2000/svg"
+                                    id="flag-icons-us" viewBox="0 0 640 480">
+                                    <path fill="#bd3d44" d="M0 0h640v480H0" />
+                                    <path stroke="#fff" stroke-width="37"
+                                        d="M0 55.3h640M0 129h640M0 203h640M0 277h640M0 351h640M0 425h640" />
+                                    <path fill="#192f5d" d="M0 0h364.8v258.5H0" />
+                                    <marker id="us-a" markerHeight="30" markerWidth="30">
+                                        <path fill="#fff" d="m14 0 9 27L0 10h28L5 27z" />
+                                    </marker>
+                                    <path fill="none" marker-mid="url(#us-a)"
+                                        d="m0 0 16 11h61 61 61 61 60L47 37h61 61 60 61L16 63h61 61 61 61 60L47 89h61 61 60 61L16 115h61 61 61 61 60L47 141h61 61 60 61L16 166h61 61 61 61 60L47 192h61 61 60 61L16 218h61 61 61 61 60z" />
+                                </svg>
+                                <svg x-show="enter" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"
+                                    xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img"
+                                    class="iconify iconify--emojione" preserveAspectRatio="xMidYMid meet"
+                                    fill="#000000">
+                                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                    <g id="SVGRepo_iconCarrier">
+                                        <path d="M31.8 62c16.6 0 30-13.4 30-30h-60c0 16.6 13.4 30 30 30"
+                                            fill="#f9f9f9">
+                                        </path>
+                                        <path d="M31.8 2c-16.6 0-30 13.4-30 30h60c0-16.6-13.4-30-30-30" fill="#ed4c5c">
+                                        </path>
+                                    </g>
+                                </svg>
+                            </div>
+                            <p class="mr-1 text-base">En</p>
+                        </div>
+                    </template>
+                    <template x-cloak x-if="locale == 'id'">
+                        <div class="relative flex flex-row items-center gap-x-1 rounded-full bg-green-400">
+                            <p class="ml-2 text-base">Id</p>
+                            <div class="z-20 h-[25px] w-[25px] overflow-hidden rounded-full shadow-2xl transition-all"
+                                :class="{
+                                    '-translate-x-[25px]': enter,
+                                    'translate-x-0': !enter
+                                }">
+                                <svg x-show="!enter" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"
+                                    xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img"
+                                    class="iconify iconify--emojione" preserveAspectRatio="xMidYMid meet"
+                                    fill="#000000">
+                                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                    <g id="SVGRepo_iconCarrier">
+                                        <path d="M31.8 62c16.6 0 30-13.4 30-30h-60c0 16.6 13.4 30 30 30"
+                                            fill="#f9f9f9">
+                                        </path>
+                                        <path d="M31.8 2c-16.6 0-30 13.4-30 30h60c0-16.6-13.4-30-30-30" fill="#ed4c5c">
+                                        </path>
+                                    </g>
+                                </svg>
+                                <svg class="w-[35px]" x-show="enter" xmlns="http://www.w3.org/2000/svg"
+                                    id="flag-icons-us" viewBox="0 0 640 480">
+                                    <path fill="#bd3d44" d="M0 0h640v480H0" />
+                                    <path stroke="#fff" stroke-width="37"
+                                        d="M0 55.3h640M0 129h640M0 203h640M0 277h640M0 351h640M0 425h640" />
+                                    <path fill="#192f5d" d="M0 0h364.8v258.5H0" />
+                                    <marker id="us-a" markerHeight="30" markerWidth="30">
+                                        <path fill="#fff" d="m14 0 9 27L0 10h28L5 27z" />
+                                    </marker>
+                                    <path fill="none" marker-mid="url(#us-a)"
+                                        d="m0 0 16 11h61 61 61 61 60L47 37h61 61 60 61L16 63h61 61 61 61 60L47 89h61 61 60 61L16 115h61 61 61 61 60L47 141h61 61 60 61L16 166h61 61 61 61 60L47 192h61 61 60 61L16 218h61 61 61 61 60z" />
+                                </svg>
+                            </div>
+                            <p class="absolute right-1 text-base">En</p>
+                        </div>
+                    </template>
+                </div>
+            </div>
         </div>
 
     </nav>
     <livewire:component.footer />
+    <div x-data="{ showTop: false }"
+        @scroll.window="showTop = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) > 0.5">
+        <button x-show="showTop" x-transition @click="window.scrollTo({ top: 0, behavior: 'smooth' })"
+            class="fixed md:right-10 md:bottom-10 bottom-5 right-5 cursor-pointer z-50 h-14 w-14  rounded-full border-0 bg-secondary-warn/70 p-4 text-lg font-semibold text-white shadow-md transition-colors duration-300 hover:bg-secondary-warn flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-6 w-6">
+                <path d="M12 4l8 8h-6v8h-4v-8H4l8-8z" />
+            </svg>
+            <span class="sr-only">Go to top</span>
+        </button>
+    </div>
+
 
 </body>
+<script>
+    if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+    }
+
+    window.addEventListener("beforeunload", () => {
+        localStorage.setItem("scrollY", window.scrollY);
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const y = localStorage.getItem("scrollY");
+        if (y !== null) {
+            window.scrollTo({
+                top: parseInt(y),
+                behavior: "smooth"
+            });
+        }
+    });
+</script>
 
 </html>

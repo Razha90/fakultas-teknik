@@ -58,30 +58,6 @@ new class extends Component {
         $category->name = 'Unimed';
         $category->save();
     }
-
-    public function addLikes($id)
-    {
-        $news = News::find($id);
-        if ($news) {
-            $news->increment('likes');
-        } else {
-            $this->dispatch('failed', [
-                'message' => __('news.error'),
-            ]);
-        }
-    }
-
-    public function removeLikes($id)
-    {
-        $news = News::find($id);
-        if ($news) {
-            $news->decrement('likes');
-        } else {
-            $this->dispatch('failed', [
-                'message' => __('news.error'),
-            ]);
-        }
-    }
 }; ?>
 
 <div x-data="initNewsContent" x-init="init" x-ref="content" class="flex w-full flex-row justify-start gap-x-7"
@@ -189,57 +165,7 @@ new class extends Component {
                         <p class="mx-1 text-sm text-gray-300"> - </p>
                         <p class="text-sm text-gray-300" x-text="changeDate(data.created_at)"></p>
                     </div>
-                    <div class="flex flex-row items-center gap-x-1">
-                        <p class="text-sm text-gray-300" x-text="formatLikes(data.likes)"></p>
-                        <svg class="animate-fade w-[20px] cursor-pointer text-gray-400 transition-all hover:opacity-70"
-                            x-show="!isLiked(data.id)" @click="giveLikes(data.id)" viewBox="0 -2.5 21 21" version="1.1"
-                            xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-                            fill="currentColor">
-                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round">
-                            </g>
-                            <g id="SVGRepo_iconCarrier">
-                                <title>love [#1489]</title>
-                                <desc>Created with Sketch.</desc>
-                                <defs> </defs>
-                                <g id="Page-1" stroke="none" stroke-width="1" fill="none"
-                                    fill-rule="evenodd">
-                                    <g id="Dribbble-Light-Preview" transform="translate(-99.000000, -362.000000)"
-                                        fill="currentColor">
-                                        <g id="icons" transform="translate(56.000000, 160.000000)">
-                                            <path
-                                                d="M55.5929644,215.348992 C55.0175653,215.814817 54.2783665,216.071721 53.5108177,216.071721 C52.7443189,216.071721 52.0030201,215.815817 51.4045211,215.334997 C47.6308271,212.307129 45.2284309,210.70073 45.1034811,207.405962 C44.9722313,203.919267 48.9832249,202.644743 51.442321,205.509672 C51.9400202,206.088455 52.687619,206.420331 53.4940177,206.420331 C54.3077664,206.420331 55.0606152,206.084457 55.5593644,205.498676 C57.9649106,202.67973 62.083004,203.880281 61.8950543,207.507924 C61.7270546,210.734717 59.2322586,212.401094 55.5929644,215.348992 M53.9066671,204.31012 C53.8037672,204.431075 53.6483675,204.492052 53.4940177,204.492052 C53.342818,204.492052 53.1926682,204.433074 53.0918684,204.316118 C49.3717243,199.982739 42.8029348,202.140932 43.0045345,207.472937 C43.1651842,211.71635 46.3235792,213.819564 50.0426732,216.803448 C51.0370217,217.601149 52.2739197,218 53.5108177,218 C54.7508657,218 55.9898637,217.59915 56.9821122,216.795451 C60.6602563,213.815565 63.7787513,211.726346 63.991901,207.59889 C64.2754005,202.147929 57.6173611,199.958748 53.9066671,204.31012">
-                                            </path>
-                                        </g>
-                                    </g>
-                                </g>
-                            </g>
-                        </svg>
-                        <svg x-show="isLiked(data.id)" @click="giveLikes(data.id)"
-                            class="animate-fade w-[20px] cursor-pointer text-red-400 transition-all hover:opacity-70"
-                            viewBox="0 -2.5 21 21" version="1.1" xmlns="http://www.w3.org/2000/svg"
-                            xmlns:xlink="http://www.w3.org/1999/xlink" fill="currentColor">
-                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round">
-                            </g>
-                            <g id="SVGRepo_iconCarrier">
-                                <title>love [#1488]</title>
-                                <desc>Created with Sketch.</desc>
-                                <defs> </defs>
-                                <g id="Page-1" stroke="none" stroke-width="1" fill="none"
-                                    fill-rule="evenodd">
-                                    <g id="Dribbble-Light-Preview" transform="translate(-139.000000, -361.000000)"
-                                        fill="currentColor">
-                                        <g id="icons" transform="translate(56.000000, 160.000000)">
-                                            <path
-                                                d="M103.991908,206.599878 C103.779809,210.693878 100.744263,212.750878 96.9821188,215.798878 C94.9997217,217.404878 92.0324261,217.404878 90.042679,215.807878 C86.3057345,212.807878 83.1651892,210.709878 83.0045394,206.473878 C82.8029397,201.150878 89.36438,198.971878 93.0918745,203.314878 C93.2955742,203.552878 93.7029736,203.547878 93.9056233,203.309878 C97.6205178,198.951878 104.274358,201.159878 103.991908,206.599878"
-                                                id="love-[#1488]"> </path>
-                                        </g>
-                                    </g>
-                                </g>
-                            </g>
-                        </svg>
-                    </div>
+                   
                 </div>
             </div>
         </template>
@@ -270,7 +196,6 @@ new class extends Component {
             itemsPerRow: 0,
             stopInit: false,
             shown: false,
-            likes: JSON.parse(localStorage.getItem('likes')) || [],
             loadPage: false,
             init() {
                 if (this.stopInit) return;
@@ -302,47 +227,9 @@ new class extends Component {
                 await this.$wire.search(this.news.current_page - 1, this.itemsPerRow);
                 this.loadPage = false;
             },
-            giveLikes(idLikes) {
-                if (!this.likes) {
-                    this.likes = [];
-                }
-                const index = this.likes.indexOf(idLikes);
-                if (index === -1) {
-                    this.$wire.addLikes(idLikes);
-                    this.likes.push(idLikes);
-                    this.news.data = this.news.data.map(item => {
-                        if (item.id === idLikes) {
-                            item.likes += 1;
-                        }
-                        return item;
-                    });
-                } else {
-                    this.$wire.removeLikes(idLikes);
-                    this.likes.splice(index, 1);
-                    this.news.data = this.news.data.map(item => {
-                        if (item.id === idLikes) {
-                            item.likes -= 1;
-                        }
-                        return item;
-                    });
-                }
-                localStorage.setItem('likes', JSON.stringify(this.likes));
-            },
-            isLiked(id) {
-                return this.likes.includes(id);
-            },
             changeDate(createdAt) {
                 const formattedTime = moment(createdAt).fromNow();
                 return formattedTime;
-            },
-            formatLikes(number) {
-                if (number >= 1_000_000) {
-                    return (number / 1_000_000).toFixed(1).replace('.', ',') + 'M';
-                } else if (number >= 1_000) {
-                    return (number / 1_000).toFixed(1).replace('.', ',') + 'K';
-                } else {
-                    return number.toString();
-                }
             },
             calculateColumns() {
                 let container = this.$refs.content;

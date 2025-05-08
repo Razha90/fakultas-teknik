@@ -6,38 +6,52 @@ new class extends Component {
     //
 }; ?>
 
-<header class="animate-fade-down fixed top-0 z-40 w-full" x-data="{ scrolled: false, must_open: false, nav: false }"
-    @scroll.window="scrolled = window.scrollY > 400" x-init="scrolled = window.scrollY > 400">
-    <div class="bg-primary border-primary-dark absolute left-0 top-0 h-full w-full border-b-2 shadow-2xl transition-all"
-        x-show="scrolled || must_open" x-transition:enter-start="opacity-0 -translate-y-10"
+<header class="animate-fade-down fixed top-0 z-40 w-full nav-3:p-0 py-2" x-data="{
+    scrolled: false,
+    must_open: false,
+    nav: false,
+    get tinyLayer() {
+        return window.innerWidth > 600 ? 400 : 50;
+    },
+    path: window.location.pathname,
+    listTran:['/'],
+    get isInList() {
+        return this.listTran.includes(this.path);
+    }
+}"
+    @scroll.window="scrolled = window.scrollY > tinyLayer" x-init="scrolled = window.scrollY > 400">
+    <div x-cloak class="bg-primary border-primary-dark absolute left-0 top-0 h-full w-full border-b-2 shadow-2xl transition-all"
+        x-show="scrolled || must_open || !isInList" x-transition:enter-start="opacity-0 -translate-y-10"
         x-transition:enter-end="opacity-100 translate-y-0"></div>
-    <div class="mx-auto flex w-full max-w-[var(--max-width)] flex-row px-10 transition-all">
+    <div class="nav-2:px-10 mx-auto flex w-full max-w-[var(--max-width)] flex-row px-5 transition-all">
         <div class="text-primary z-10 flex w-[350px] cursor-pointer flex-row items-center justify-center gap-x-2 rounded-xl"
             @click.prevent="
     if (window.location.pathname != '/') {
         goToPage('{{ route('home') }}')
     }
 ">
-            <img class="w-[4vw] min-w-[40px] max-w-[80px]" src="{{ asset('img/unimed.png') }}"
+            <img class="nav-2:w-[65px] w-[50px] min-w-[40px] max-w-[80px]" src="{{ asset('img/unimed.png') }}"
                 alt="{{ config('app.name') }}">
             <div class="flex flex-col">
-                <p class="text-accent-white font-merriweather text-xl font-bold">FAKULTAS TEKNIK</p>
-                <p class="text-accent-white font-merriweather text-3xl font-bold">UNIMED</p>
+                <p class="text-accent-white font-merriweather nav-2:text-xl w-[192px] text-lg font-bold">FAKULTAS TEKNIK
+                </p>
+                <p class="text-accent-white font-merriweather nav-2:text-3xl text-xl font-bold">UNIMED</p>
             </div>
         </div>
-        <div class="z-10 flex w-full flex-row items-center justify-end gap-x-2 text-xl font-bold text-white">
-            <nav class="relative flex flex-row items-center gap-x-5" x-data="{
-                open: '',
-                opened(con) {
-                    must_open = true;
-                    this.open = con;
-                },
-                closed() {
-                    must_open = false;
-                    this.open = '';
-                }
-            
-            }" @mouseleave="closed">
+        <div class="z-10 flex w-full flex-row items-center justify-end gap-x-2 text-lg font-bold text-white">
+            <nav x-cloak class="nav-1:flex animate-fade-down relative hidden flex-row items-center gap-x-5"
+                x-data="{
+                    open: '',
+                    opened(con) {
+                        must_open = true;
+                        this.open = con;
+                    },
+                    closed() {
+                        must_open = false;
+                        this.open = '';
+                    }
+                
+                }" @mouseleave="closed">
 
                 <div
                     class="border-accent-white hover:border-secondary-warn group cursor-pointer overflow-hidden border-b-2">
@@ -227,10 +241,24 @@ new class extends Component {
             </div> -->
             </nav>
 
-            <div x-data="{ locale: '{{ Cookie::get('locale', 'id') }}', lang_id: '{{ route('change.lang', ['lang' => 'id']) }}', lang_en: '{{ route('change.lang', ['lang' => 'en']) }}', enter: false, clicked: false }" @click="goToPage(locale == 'id' ? lang_en : lang_id); clicked=true"
-                class="flex cursor-pointer items-center justify-center" @mouseenter="enter = true"
-                @mouseleave="if (!clicked) enter = false">
-                <template x-if="locale == 'en'">
+            <div class="nav-3:block hidden nav-2:py-10 hover:text-secondary-warn ml-3 cursor-pointer py-5 text-white"
+                @click="$dispatch('searching')">
+                <svg class="h-[25px] w-[25px] transition-all" viewBox="0 0 24 24" fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                    <g id="SVGRepo_iconCarrier">
+                        <path
+                            d="M11 6C13.7614 6 16 8.23858 16 11M16.6588 16.6549L21 21M19 11C19 15.4183 15.4183 19 11 19C6.58172 19 3 15.4183 3 11C3 6.58172 6.58172 3 11 3C15.4183 3 19 6.58172 19 11Z"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        </path>
+                    </g>
+                </svg>
+            </div>
+            <div x-cloak x-data="{ locale: '{{ Cookie::get('locale', 'id') }}', lang_id: '{{ route('change.lang', ['lang' => 'id']) }}', lang_en: '{{ route('change.lang', ['lang' => 'en']) }}', enter: false, clicked: false }" @click="goToPage(locale == 'id' ? lang_en : lang_id); clicked=true"
+                class="nav-3:flex hidden nav-2:py-10 animate-fade cursor-pointer items-center justify-center py-5"
+                @mouseenter="enter = true" @mouseleave="if (!clicked) enter = false">
+                <template x-cloak x-if="locale == 'en'">
                     <div class="relative flex flex-row items-center gap-x-1 rounded-full bg-green-400">
                         <p class="absolute left-2 text-base">Id</p>
                         <div class="h-[25px] w-[25px] overflow-hidden rounded-full shadow-2xl transition-all"
@@ -267,7 +295,7 @@ new class extends Component {
                         <p class="mr-1 text-base">En</p>
                     </div>
                 </template>
-                <template x-if="locale == 'id'">
+                <template x-cloak x-if="locale == 'id'">
                     <div class="relative flex flex-row items-center gap-x-1 rounded-full bg-green-400">
                         <p class="ml-2 text-base">Id</p>
                         <div class="z-20 h-[25px] w-[25px] overflow-hidden rounded-full shadow-2xl transition-all"
@@ -303,28 +331,8 @@ new class extends Component {
                         <p class="absolute right-1 text-base">En</p>
                     </div>
                 </template>
-                <!-- <p class="text-accent-white/40 text-xl">/</p>
-                    <p
-                        :class="{
-                            'text-3xl text-accent-white ':locale=='id', '
-                            text - xl text - accent - white / 40 ': locale != '
-                            id '}">
-                        Id</p> -->
             </div>
-            <div class="hover:text-secondary-warn ml-3 cursor-pointer text-white" @click="$dispatch('searching')">
-                <svg class="h-[25px] w-[25px] transition-all" viewBox="0 0 24 24" fill="none"
-                    xmlns="http://www.w3.org/2000/svg">
-                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                    <g id="SVGRepo_iconCarrier">
-                        <path
-                            d="M11 6C13.7614 6 16 8.23858 16 11M16.6588 16.6549L21 21M19 11C19 15.4183 15.4183 19 11 19C6.58172 19 3 15.4183 3 11C3 6.58172 6.58172 3 11 3C15.4183 3 19 6.58172 19 11Z"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        </path>
-                    </g>
-                </svg>
-            </div>
-            <div class="text-accent-white bg-primary-dark hover:text-secondary-warn cursor-pointer overflow-hidden rounded-md p-2"
+            <div class="nav-1:hidden text-accent-white bg-primary-dark hover:text-secondary-warn ml-3 block cursor-pointer overflow-hidden rounded-md p-2"
                 @click="$dispatch('navigation')">
                 <svg class="h-[25px] w-[25px] transition-all hover:scale-150" viewBox="-0.5 0 25 25" fill="none"
                     xmlns="http://www.w3.org/2000/svg">
