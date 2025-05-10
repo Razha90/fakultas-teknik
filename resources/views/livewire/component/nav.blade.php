@@ -6,21 +6,28 @@ new class extends Component {
     //
 }; ?>
 
-<header class="animate-fade-down fixed top-0 z-40 w-full nav-3:p-0 py-2" x-data="{
+<header class="animate-fade-down nav-3:p-0 fixed top-0 z-40 w-full py-2" x-data="{
     scrolled: false,
     must_open: false,
     nav: false,
     get tinyLayer() {
-        return window.innerWidth > 600 ? 400 : 50;
+        const match = this.listTran.find(item => item.name === this.path);
+        if (match) {
+            return window.innerWidth > 600 ? match.xl : match.sm;
+        }
+        return window.innerWidth > 600 ? 400 : 50; // default fallback
     },
     path: window.location.pathname,
-    listTran:['/'],
+    listTran: [{ name: '/', xl: 600, sm: 50 },
+        { name: '/search', xl: 300, sm: 50 },
+    ],
     get isInList() {
-        return this.listTran.includes(this.path);
-    }
+        return this.listTran.some(item => item.name === this.path);
+    },
 }"
     @scroll.window="scrolled = window.scrollY > tinyLayer" x-init="scrolled = window.scrollY > 400">
-    <div x-cloak class="bg-primary border-primary-dark absolute left-0 top-0 h-full w-full border-b-2 shadow-2xl transition-all"
+    <div x-cloak
+        class="bg-primary border-primary-dark absolute left-0 top-0 h-full w-full border-b-2 shadow-2xl transition-all"
         x-show="scrolled || must_open || !isInList" x-transition:enter-start="opacity-0 -translate-y-10"
         x-transition:enter-end="opacity-100 translate-y-0"></div>
     <div class="nav-2:px-10 mx-auto flex w-full max-w-[var(--max-width)] flex-row px-5 transition-all">
@@ -241,7 +248,7 @@ new class extends Component {
             </div> -->
             </nav>
 
-            <div class="nav-3:block hidden nav-2:py-10 hover:text-secondary-warn ml-3 cursor-pointer py-5 text-white"
+            <div class="nav-3:block nav-2:py-10 hover:text-secondary-warn ml-3 hidden cursor-pointer py-5 text-white"
                 @click="$dispatch('searching')">
                 <svg class="h-[25px] w-[25px] transition-all" viewBox="0 0 24 24" fill="none"
                     xmlns="http://www.w3.org/2000/svg">
@@ -256,7 +263,7 @@ new class extends Component {
                 </svg>
             </div>
             <div x-cloak x-data="{ locale: '{{ Cookie::get('locale', 'id') }}', lang_id: '{{ route('change.lang', ['lang' => 'id']) }}', lang_en: '{{ route('change.lang', ['lang' => 'en']) }}', enter: false, clicked: false }" @click="goToPage(locale == 'id' ? lang_en : lang_id); clicked=true"
-                class="nav-3:flex hidden nav-2:py-10 animate-fade cursor-pointer items-center justify-center py-5"
+                class="nav-3:flex nav-2:py-10 animate-fade hidden cursor-pointer items-center justify-center py-5"
                 @mouseenter="enter = true" @mouseleave="if (!clicked) enter = false">
                 <template x-cloak x-if="locale == 'en'">
                     <div class="relative flex flex-row items-center gap-x-1 rounded-full bg-green-400">

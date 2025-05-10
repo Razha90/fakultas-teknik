@@ -89,16 +89,24 @@
         </button>
     </div>
 
-    <div x-cloak x-data="{ shown: false }" x-on:searching.window="(event) => {
+    <div x-cloak x-data="{
+        shown: false,
+        search: '',
+        navigate() {
+            goToPage('http://127.0.0.1:8001/search' + '?search=' + this.search);
+        }
+    
+    }" x-on:searching.window="(event) => {
         shown = true;
+        $nextTick(() => $refs.searchInput.focus());
     }"
         class="fixed inset-0 z-40 flex items-center justify-center bg-black/60" x-transition x-show="shown">
         <div class="w-md h-[100px] max-w-md" @click.away="shown=false">
-            <div class="relative">
-                <input type="text"
-                    class="border-primary w-full border-b-2 px-4 py-2 text-3xl text-white focus:outline-none focus:ring-0"
-                    placeholder="{{ __('nav.seach') }}">
-                <div class="text-accent-white bg-primary absolute right-2 top-2 rounded-full p-2 transition-all">
+            <div class="border-primary flex flex-row items-center border-b-2">
+                <input x-ref="searchInput" type="text" x-model="search"
+                    class="w-full px-4 py-2 text-3xl text-white focus:outline-none focus:ring-0"
+                    placeholder="{{ __('nav.seach') }}" @keydown.enter="navigate">
+                <div class="text-accent-white bg-primary rounded-full p-2 transition-all" @click="navigate">
                     <svg class="h-[20px] w-[20px]" viewBox="0 0 24 24" fill="none"
                         xmlns="http://www.w3.org/2000/svg">
                         <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -408,7 +416,7 @@
             </div>
             <div class="nav-3:hidden animate-fade flex w-full items-center justify-center gap-x-5">
                 <div class="nav-2:py-10 hover:text-secondary-warn ml-3 block cursor-pointer py-5 text-white"
-                    @click="$dispatch('searching')">
+                    @click="$dispatch('searching'); shown=false">
                     <svg class="h-[25px] w-[25px] transition-all" viewBox="0 0 24 24" fill="none"
                         xmlns="http://www.w3.org/2000/svg">
                         <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -508,18 +516,35 @@
         </div>
 
     </nav>
+
     <livewire:component.footer />
-    <div x-data="{ showTop: false }"
+
+    <!-- <div x-data="{ showTop: false }"
         @scroll.window="showTop = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) > 0.5">
         <button x-show="showTop" x-transition @click="window.scrollTo({ top: 0, behavior: 'smooth' })"
-            class="fixed md:right-10 md:bottom-10 bottom-5 right-5 cursor-pointer z-50 h-14 w-14  rounded-full border-0 bg-secondary-warn/70 p-4 text-lg font-semibold text-white shadow-md transition-colors duration-300 hover:bg-secondary-warn flex items-center justify-center">
+            class="bg-secondary-warn/70 hover:bg-secondary-warn fixed bottom-5 right-5 z-50 flex h-14 w-14 cursor-pointer items-center justify-center rounded-full border-0 p-4 text-lg font-semibold text-white shadow-md transition-colors duration-300 md:bottom-10 md:right-10">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-6 w-6">
                 <path d="M12 4l8 8h-6v8h-4v-8H4l8-8z" />
             </svg>
             <span class="sr-only">Go to top</span>
         </button>
-    </div>
+    </div> -->
 
+    <div x-cloak x-data="{ showTop: false }"
+     @scroll.window="
+        showTop = (
+            document.body.scrollHeight > window.innerHeight &&
+            (window.scrollY / (document.body.scrollHeight - window.innerHeight)) > 0.5
+        )
+    ">
+    <button x-show="showTop" x-transition @click="window.scrollTo({ top: 0, behavior: 'smooth' })"
+        class="bg-secondary-warn/70 hover:bg-secondary-warn fixed bottom-5 right-5 z-50 flex h-14 w-14 cursor-pointer items-center justify-center rounded-full border-0 p-4 text-lg font-semibold text-white shadow-md transition-colors duration-300 md:bottom-10 md:right-10">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-6 w-6">
+            <path d="M12 4l8 8h-6v8h-4v-8H4l8-8z" />
+        </svg>
+        <span class="sr-only">Go to top</span>
+    </button>
+</div>
 
 </body>
 <script>
@@ -527,19 +552,36 @@
         history.scrollRestoration = 'manual';
     }
 
+    const currentPath = location.pathname;
+    const scrollKey = "savedScroll";
+    
     window.addEventListener("beforeunload", () => {
-        localStorage.setItem("scrollY", window.scrollY);
+        localStorage.setItem(scrollKey, JSON.stringify({
+            path: currentPath,
+            scrollY: window.scrollY
+        }));
     });
 
     document.addEventListener("DOMContentLoaded", () => {
-        const y = localStorage.getItem("scrollY");
-        if (y !== null) {
-            window.scrollTo({
-                top: parseInt(y),
-                behavior: "smooth"
-            });
+        const saved = localStorage.getItem(scrollKey);
+
+        if (saved) {
+            try {
+                const parsed = JSON.parse(saved);
+                if (parsed.path === currentPath) {
+                    window.scrollTo({
+                        top: parseInt(parsed.scrollY),
+                        behavior: "smooth"
+                    });
+                } else {
+                    localStorage.removeItem(scrollKey);
+                }
+            } catch (e) {
+                localStorage.removeItem(scrollKey);
+            }
         }
     });
 </script>
+
 
 </html>

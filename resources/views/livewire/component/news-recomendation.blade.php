@@ -8,7 +8,7 @@ new class extends Component {
     public function search()
     {
         try {
-            $this->data = News::with('categories', 'user')->orderBy('created_at', 'desc')->orderBy('views', 'desc')->limit(7)->get()->toArray();
+            $this->data = News::with('categories', 'user')->orderBy('created_at', 'desc')->orderBy('views', 'desc')->limit(8)->get()->toArray();
         } catch (\Throwable $th) {
             $this->dispatch('failed', [
                 'message' => __('news.error'),
@@ -104,9 +104,6 @@ new class extends Component {
             },
             init() {
                 this.$wire.search();
-                setTimeout(() => {
-                    console.log(this.datas);
-                }, 1000);
             },
         }
     }

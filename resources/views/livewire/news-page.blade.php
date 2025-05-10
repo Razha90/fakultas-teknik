@@ -81,7 +81,7 @@ new #[Layout('components.layouts.home')] class extends Component {
                 <div class="relative h-auto w-auto lg:h-full lg:w-24">
                     <div
                         class="static top-32 flex flex-row justify-center gap-x-3 rounded-xl py-2 lg:sticky lg:flex-col">
-                        <div class="flex flex-col items-center justify-center lg:flex-row">
+                        <div class="flex flex-col items-center justify-center">
                             <div class="animate-fade flex items-center justify-center">
                                 <svg class="w-[35px] text-gray-500" viewBox="0 0 24 24" fill="none"
                                     xmlns="http://www.w3.org/2000/svg">
@@ -116,7 +116,7 @@ new #[Layout('components.layouts.home')] class extends Component {
                 </div>
             </template>
         </div>
-        <div class="bg-accent-white border-primary-light/30 order-1 w-full border-l pl-2 lg:order-2">
+        <div class="bg-accent-white order-1 w-full pl-2 lg:order-2">
             <template x-if="!datas || (Array.isArray(datas) && datas.length === 0)">
                 <div class="bg-accent-white">
                     <div
@@ -388,7 +388,7 @@ new #[Layout('components.layouts.home')] class extends Component {
             },
 
             changeDate(createdAt) {
-                const formattedTime = moment(createdAt).fromNow(); // Menggunakan moment.js yang sudah tersedia
+                const formattedTime = moment(createdAt).fromNow();
                 return formattedTime;
             },
             addView(id) {

@@ -18,4 +18,7 @@ return [
   'asc' => 'A-Z',
   'desc' => 'Z-A',
   'sort' => 'Urutkan',
+  'search_category' => 'Cari Kategori',
+  'failed_category' => 'Gagal mendapatkan kategori',
+  'search' => 'Pencarian',
 ];

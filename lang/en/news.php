@@ -18,4 +18,7 @@ return [
   'asc' => 'A-Z',
   'desc' => 'Z-A',
   'sort' => 'Sort',
+  'search_category' => 'Search Category',
+  'failed_category' => 'Failed to get category',
+  'search' => 'Search',
 ];
