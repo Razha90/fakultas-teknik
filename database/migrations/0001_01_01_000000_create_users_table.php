@@ -11,15 +11,23 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->string('image')->nullable();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->rememberToken();
-            $table->timestamps();
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('name');
+            $table->uuid('id')->change();
+            $table->string('username')->unique()->after('id');
+            $table->string('fullname')->unique()->after('username');
+            $table->enum('role', ['staff', 'admin'])->default('admin')->after('email');
+            $table->uuid('id_department')->after('role');
+            $table->string('position')->after('id_department');
+            $table->integer('phone_number')->after( 'position' );
+            $table -> string ('image')->nullable()->after('phone_number');
+        });
+
+        Schema::table('users', function (Blueprint $t) {
+            $t->foreign('id_department')          // Menetapkan kolom 'id_department' sebagai foreign key
+              ->references('id')                  // Foreign key ini merujuk ke kolom 'id'
+              ->on('departments')                 // Pada tabel 'departments'
+              ->onDelete('cascade');              // Jika data di departments dihapus, maka data terkait di users juga ikut terhapus (cascade delete)
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
@@ -46,5 +54,19 @@ return new class extends Migration
         Schema::dropIfExists('users');
         Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
+
+        Schema::table('users', function (Blueprint $t) {
+            // 1. Hapus foreign key constraint terlebih dahulu sebelum menghapus kolom yang terkait
+            $t->dropForeign(['users_id_department_foreign']);
+
+            // 2. Hapus kolom-kolom baru yang sebelumnya ditambahkan di migration up()
+            $t->dropColumn(['username', 'fullname', 'role', 'id_department', 'position', 'phone_number', 'image']);
+
+            // 3. Ubah kembali tipe kolom id menjadi unsignedBigInteger (bigIncrements)
+            $t->unsignedBigInteger('id')->change();
+
+            // 4. Tambahkan kembali kolom name yang sebelumnya dihapus, letakkan setelah email_verified_at
+            $t->string('name')->after('email_verified_at');
+        });
     }
 };
