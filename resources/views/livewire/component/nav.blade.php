@@ -6,7 +6,7 @@ new class extends Component {
     //
 }; ?>
 
-<header class="animate-fade-down nav-3:p-0 fixed top-0 z-40 w-full py-2" x-data="{
+<header class="animate-fade-down nav-3:p-0 fixed top-0 z-50 w-full py-2" x-data="{
     scrolled: false,
     must_open: false,
     nav: false,

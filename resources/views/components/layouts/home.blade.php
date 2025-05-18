@@ -538,7 +538,7 @@
         )
     ">
     <button x-show="showTop" x-transition @click="window.scrollTo({ top: 0, behavior: 'smooth' })"
-        class="bg-secondary-warn/70 hover:bg-secondary-warn fixed bottom-5 right-5 z-50 flex h-14 w-14 cursor-pointer items-center justify-center rounded-full border-0 p-4 text-lg font-semibold text-white shadow-md transition-colors duration-300 md:bottom-10 md:right-10">
+        class="bg-secondary-warn/70 hover:bg-secondary-warn fixed bottom-5 right-5 z-40 flex h-14 w-14 cursor-pointer items-center justify-center rounded-full border-0 p-4 text-lg font-semibold text-white shadow-md transition-colors duration-300 md:bottom-10 md:right-10">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-6 w-6">
             <path d="M12 4l8 8h-6v8h-4v-8H4l8-8z" />
         </svg>
