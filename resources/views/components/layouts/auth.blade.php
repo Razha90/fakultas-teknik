@@ -84,7 +84,7 @@
     window.addEventListener('loginFailed', event => {
     Swal.fire({
         icon: 'error',
-        title: 'Login Gagal!',
+        title: 'Login Gagal!', 
         text: 'Email atau password yang kamu masukkan salah. Coba lagi!',
         confirmButtonText: 'Oke'
     });
