@@ -95,7 +95,10 @@ window.addEventListener('loginSuccess', event => {
         icon: 'success',
         title: 'Login Berhasil',
         showConfirmButton: false,
-        timer: 3000
+        timer: 3000,
+        willClose: () => {
+            window.location.href = "{{ route('dashboard') }}";
+        }
     });
 });
 

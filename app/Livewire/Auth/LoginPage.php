@@ -22,7 +22,7 @@ class LoginPage extends Component
 
     if (Auth::attempt($credentials)) {
         session()->regenerate();
-        return $this->redirectRoute('dashboard');
+       $this->dispatch('loginSuccess');
     } else {
         $this->dispatch('loginFailed');
     }
