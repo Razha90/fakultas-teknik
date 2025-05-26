@@ -2,12 +2,17 @@
 
 use Livewire\Volt\Component;
 use Livewire\Attributes\Layout;
-use App\Models\News;
+use App\Models\Content;
 
 new #[Layout('components.layouts.home')] class extends Component {
     public $id;
     public $error;
     public $data;
+
+    // Properti tambahan untuk popular dan related news
+    public $popularNews = [];
+    public $relatedNews = [];
+
     public function mount($id)
     {
         $this->id = $id;
@@ -16,7 +21,13 @@ new #[Layout('components.layouts.home')] class extends Component {
     public function search()
     {
         try {
-            $this->data = News::with('categories', 'user')->orderBy('created_at', 'desc')->find($this->id)->toArray();
+            $this->data = Content::with(['categories', 'user.department', 'type'])
+                ->find($this->id)?->toArray();
+
+            if ($this->data) {
+                $this->popularNews = $this->getPopularNews()->toArray();
+                $this->relatedNews = $this->getRelatedNews($this->id)->toArray();
+            }
         } catch (\Throwable $th) {
             $this->error = __('news.not_found');
         }
@@ -24,18 +35,52 @@ new #[Layout('components.layouts.home')] class extends Component {
 
     public function addView($id)
     {
-        $news = News::find($id);
-        if ($news) {
-            $news->increment('views');
-        } else {
-            $this->dispatch('failed', [
-                'message' => __('news.error'),
-            ]);
-        }
-    }
-}; ?>
+        $content = Content::find($id);
 
-<div x-data="initNewsPage" x-init="init">
+        if (!$content) {
+            dd("Content with ID $id not found");
+        }
+
+        $before = $content->views;
+        $content->increment('views');
+        $after = $content->fresh()->views;
+
+        dd([
+            'id' => $id,
+            'views_before' => $before,
+            'views_after' => $after,
+        ]);
+    }
+
+    // Ambil 4 berita terpopuler berdasarkan views dan status published
+    public function getPopularNews()
+    {
+        return Content::where('status', 'published')
+            ->orderByDesc('views')
+            ->limit(4)
+            ->get();
+    }
+
+    // Ambil 3 berita terkait dengan kategori yang sama kecuali berita utama
+    public function getRelatedNews($contentId)
+    {
+        $content = Content::find($contentId);
+        if (!$content) {
+            return collect();
+        }
+
+        return Content::where('categories_id', $content->categories_id)
+            ->where('id', '!=', $content->id)
+            ->where('status', 'published')
+            ->orderByDesc('published_at')
+            ->limit(3)
+            ->get();
+    }
+};
+
+?>
+
+<div x-data="initNewsPage()" x-init="init()">
     @push('meta')
         <meta name="keywords" content="universitas, pendidikan, Medan, kampus, unimed, mahasiswa, akademik">
         <meta name="description"
@@ -51,7 +96,7 @@ new #[Layout('components.layouts.home')] class extends Component {
                         <svg class="h-[35px] w-[35px] object-cover text-gray-200 dark:text-gray-600" aria-hidden="true"
                             xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
                             <path
-                                d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z" />
+                                d="M18 0H2a2 2 0 0 0-2 2v14a2  2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z" />
                         </svg>
                     </div>
                     <div class="animate-fade mt-1 h-4 w-[35px] animate-pulse rounded-full bg-gray-200 dark:bg-gray-700">
@@ -80,7 +125,7 @@ new #[Layout('components.layouts.home')] class extends Component {
             <template x-if="datas">
                 <div class="relative h-auto w-auto lg:h-full lg:w-24">
                     <div
-                        class="static top-32 flex flex-row justify-center gap-x-3 rounded-xl py-2 lg:sticky lg:flex-col">
+                        class="static top-32 zflex flex-row justify-center gap-x-3 rounded-xl py-2 lg:sticky lg:flex-col">
                         <div class="flex flex-col items-center justify-center">
                             <div class="animate-fade flex items-center justify-center">
                                 <svg class="w-[35px] text-gray-500" viewBox="0 0 24 24" fill="none"
@@ -150,7 +195,7 @@ new #[Layout('components.layouts.home')] class extends Component {
                 <div>
                     <div
                         class="animate-fade relative flex aspect-video items-center justify-center overflow-hidden rounded-xl rounded-t-xl bg-gray-300 dark:bg-gray-700">
-                        <img :src="datas.image"
+                        <img :src="`/storage/${datas.image}`"
                             class="animate-fade absolute inset-0 z-10 h-full w-full object-cover" />
                     </div>
                     <div class="mb-5 mt-4 flex flex-row gap-x-3 px-5">
@@ -163,17 +208,17 @@ new #[Layout('components.layouts.home')] class extends Component {
                                 </svg>
                             </div>
                         </template>
-                        <template x-if="datas.user.image">
-                            <div class="flex items-center">
-                                <img x-bind:src="datas.user.image" :alt="datas.user.name"
-                                    class="h-10 w-10 rounded-full" />
-                            </div>
-                        </template>
-                        <div>
-                            <p class="text-base text-gray-500" x-text="datas.user.name"></p>
-                            <p class="text-sm text-gray-400">{{ __('news.posted') }} <span
-                                    x-text="changeDate(datas.created_at)"></span></p>
-                        </div>
+                            <template x-if="datas && datas.user">
+                                <div class="flex items-center gap-2">
+                                    <img x-bind:src="`/storage/${datas.user.image}`" :alt="datas.user.name" class="h-10 w-10 rounded-full" />
+                                    <span class="text-sm text-gray-600" x-text="datas.user.name"></span>
+                                </div>
+                            </template>
+                                <div>
+                                   <p class="text-base text-gray-500" x-text="formatDepartment(datas.user.name, datas.user.department?.name)"></p>
+                                    <p class="text-sm text-gray-400">{{ __('news.posted') }} <span
+                                            x-text="changeDate(datas.created_at)"></span></p>
+                                </div>
                     </div>
                     <div class="ftnews-1:mt-10 mt-5">
                         <h1 class="text-primary text-center text-2xl font-bold lg:text-4xl ftnews-1:text-xl" x-text="datas.title"></h1>
@@ -193,7 +238,7 @@ new #[Layout('components.layouts.home')] class extends Component {
                                 row-gap: 20px;
                             }
                         </style>
-                        <div id="content" x-html="datas.content"></div>
+                        <div id="content" x-text="plainContent"></div>
                         <div class="mt-3 flex flex-wrap gap-3">
                             <template x-if="datas.categories && datas.categories.length > 0">
                                 <template x-for="(item, key) in datas.categories">
@@ -367,45 +412,79 @@ new #[Layout('components.layouts.home')] class extends Component {
             datas: @entangle('data').live,
             error: @entangle('error').live,
             stopInit: false,
-            init() {
-                if (this.stopInit) {
-                    return;
+            popularNews: @entangle('popularNews').live,
+            relatedNews: @entangle('relatedNews').live,
+
+
+            // Getter untuk konten tanpa tag HTML
+            get plainContent() {
+                try {
+                    const htmlString = this.datas?.description || '';
+                    const temp = document.createElement("div");
+                    temp.innerHTML = htmlString;
+                    return temp.textContent || temp.innerText || '';
+                } catch (e) {
+                    console.error('Error parsing plainContent:', e);
+                    return '';
                 }
+            },
+
+            formatDepartment(userName, departmentName) {
+                if (!departmentName) return userName;
+
+                const nameLower = departmentName.toLowerCase();
+
+                let finalDept = nameLower.startsWith("staf ") ? departmentName.slice(5) : departmentName;
+
+                return `Staf ${finalDept}`;
+            },
+
+            init() {
+                if (this.stopInit) return;
                 this.stopInit = true;
+
+                console.log("⏳ Running this.$wire.search()...");
                 this.$wire.search();
+
                 setTimeout(() => {
                     if (this.error) {
+                        console.error("❌ Error from Livewire:", this.error);
                         this.$dispatch('failed', [{
                             message: this.error,
                         }]);
                     }
                 }, 1000);
-                this.$watch('datas', (valie) => {
-                    if (this.datas) {
-                        this.addView(this.datas.id);
+
+                this.$watch('datas', (value) => {
+                    console.log("📡 datas changed:", value);
+                    if (value?.id) {
+                        console.log("👁️ Calling addView for ID:", value.id);
+                        this.addView(value.id);
                     }
-                })
+                });
             },
 
             changeDate(createdAt) {
                 const formattedTime = moment(createdAt).fromNow();
                 return formattedTime;
             },
+
             addView(id) {
                 const data = localStorage.getItem('views');
-                if (data) {
-                    const views = JSON.parse(data);
-                    if (views.includes(id)) {
-                        return;
-                    }
+                let views = data ? JSON.parse(data) : [];
+
+                if (!views.includes(id)) {
+                    console.log("➕ Sending addView to Livewire for:", id);
+                    this.$wire.addView(id); // Fungsi Livewire (PHP)
+                    this.datas.views++;
                     views.push(id);
                     localStorage.setItem('views', JSON.stringify(views));
+                    console.log("✅ View added and saved to localStorage:", views);
                 } else {
-                    localStorage.setItem('views', JSON.stringify([id]));
+                    console.log("⚠️ View already counted for ID:", id);
                 }
-                this.$wire.addView(id);
-                this.datas.views++;
             },
+
             formatView(number) {
                 if (number >= 1_000_000) {
                     return (number / 1_000_000).toFixed(1).replace('.', ',') + 'M';
@@ -414,8 +493,8 @@ new #[Layout('components.layouts.home')] class extends Component {
                 } else {
                     return number.toString();
                 }
-            },
-
+            }
         }
     }
 </script>
+

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Log;
 use App\Models\User;
 use App\Models\Category;
 use App\Models\CategoryNews;
+use App\Models\Content;
 
 new #[Layout('components.layouts.home')] class extends Component {
     public $news;
@@ -20,106 +21,118 @@ new #[Layout('components.layouts.home')] class extends Component {
         $this->getEvent();
         $this->getPengumuman();
     }
+private function getNews()
+{
+    try {
+        $newsCollection = Content::with('type') // ambil relasi jenis konten
+            ->whereHas('type', function ($query) {
+                $query->whereIn('name', ['Berita', 'FT News', 'MBKM News']);
+            })
+            ->where('status', 'published') // hanya status published
+            ->orderBy('published_at', 'desc')
+            ->take(3)
+            ->get();
 
-    private function getNews()
-    {
-        try {
-            $newsCollection = News::with('categories')
-                ->whereHas('categories', function ($query) {
-                    $query->where('name', 'like', '%News%');
-                })
-                ->orderBy('created_at', 'desc')
-                ->take(3)
-                ->get();
-            if ($newsCollection->isEmpty()) {
-                $this->dispatch('failed', ['message' => __('news.not_found')]);
-            } else {
-                $this->news = $newsCollection->toArray();
-            }
-        } catch (\Throwable $th) {
-            $this->dispatch('failed', ['message' => 'Failed Get News']);
-            Log::error('Failed Get News', [
-                'error' => $th->getMessage(),
-                'line' => $th->getLine(),
-                'file' => $th->getFile(),
-            ]);
-        }
-    }
+        // dd($newsCollection);
 
-    private function getMBKM()
-    {
-        try {
-            $mbkmCollection = News::with('categories')
-                ->whereHas('categories', function ($query) {
-                    $query->where('name', 'like', '%MBKM%');
-                })
-                ->orderBy('created_at', 'desc')
-                ->take(5)
-                ->get();
-            if ($mbkmCollection->isEmpty()) {
-                $this->dispatch('failed', ['message' => __('news.not_found')]);
-            } else {
-                $this->mbkm = $mbkmCollection->toArray();
-            }
-        } catch (\Throwable $th) {
-            $this->dispatch('failed', ['message' => 'Failed Get News']);
-            Log::error('Failed Get News', [
-                'error' => $th->getMessage(),
-                'line' => $th->getLine(),
-                'file' => $th->getFile(),
-            ]);
+        if ($newsCollection->isEmpty()) {
+            $this->dispatch('failed', ['message' => __('news.not_found')]);
+        } else {
+            $this->news = $newsCollection->toArray();
         }
+    } catch (\Throwable $th) {
+        dd('Error:', $th->getMessage(), $th->getLine(), $th->getFile());
+        $this->dispatch('failed', ['message' => 'Failed Get News']);
+        Log::error('Failed Get News', [
+            'error' => $th->getMessage(),
+            'line' => $th->getLine(),
+            'file' => $th->getFile(),
+        ]);
     }
+}
 
-    private function getEvent()
-    {
-        try {
-            $eventCollection = News::with('categories')
-                ->whereHas('categories', function ($query) {
-                    $query->where('name', 'like', '%Events%');
-                })
-                ->orderBy('created_at', 'desc')
-                ->take(5)
-                ->get();
-            if ($eventCollection->isEmpty()) {
-                $this->dispatch('failed', ['message' => __('news.not_found')]);
-            } else {
-                $this->events = $eventCollection->toArray();
-            }
-        } catch (\Throwable $th) {
-            $this->dispatch('failed', ['message' => 'Failed Get News']);
-            Log::error('Failed Get News', [
-                'error' => $th->getMessage(),
-                'line' => $th->getLine(),
-                'file' => $th->getFile(),
-            ]);
-        }
-    }
 
-    private function getPengumuman()
-    {
-        try {
-            $eventCollection = News::with('categories')
-                ->whereHas('categories', function ($query) {
-                    $query->where('name', 'like', '%Pengumuman%');
-                })
-                ->orderBy('created_at', 'desc')
-                ->take(5)
-                ->get();
-            if ($eventCollection->isEmpty()) {
-                $this->dispatch('failed', ['message' => __('news.not_found')]);
-            } else {
-                $this->pengumuman = $eventCollection->toArray();
-            }
-        } catch (\Throwable $th) {
-            $this->dispatch('failed', ['message' => 'Failed Get News']);
-            Log::error('Failed Get News', [
-                'error' => $th->getMessage(),
-                'line' => $th->getLine(),
-                'file' => $th->getFile(),
-            ]);
+private function getMBKM()
+{
+    try {
+        $mbkmCollection = Content::with('type')
+            ->whereHas('type', function ($query) {
+                $query->where('name', 'MBKM News');
+            })
+            ->where('status', 'published')
+            ->orderBy('published_at', 'desc')
+            ->take(5)
+            ->get();
+
+        if ($mbkmCollection->isEmpty()) {
+            $this->dispatch('failed', ['message' => __('news.not_found')]);
+        } else {
+            $this->mbkm = $mbkmCollection->toArray();
         }
+    } catch (\Throwable $th) {
+        $this->dispatch('failed', ['message' => 'Failed Get MBKM News']);
+        Log::error('Failed Get MBKM News', [
+            'error' => $th->getMessage(),
+            'line' => $th->getLine(),
+            'file' => $th->getFile(),
+        ]);
     }
+}
+
+private function getEvent()
+{
+    try {
+        $eventCollection = Content::with('type')
+            ->whereHas('type', function ($query) {
+                $query->where('name', 'FT Event');
+            })
+            ->where('status', 'published')
+            ->orderBy('published_at', 'desc')
+            ->take(5)
+            ->get();
+
+        if ($eventCollection->isEmpty()) {
+            $this->dispatch('failed', ['message' => __('news.not_found')]);
+        } else {
+            $this->events = $eventCollection->toArray();
+        }
+    } catch (\Throwable $th) {
+        $this->dispatch('failed', ['message' => 'Failed Get Event News']);
+        Log::error('Failed Get Event News', [
+            'error' => $th->getMessage(),
+            'line' => $th->getLine(),
+            'file' => $th->getFile(),
+        ]);
+    }
+}
+
+private function getPengumuman()
+{
+    try {
+        $pengumumanCollection = Content::with('type')
+            ->whereHas('type', function ($query) {
+                $query->where('name', 'Pengumuman FT');
+            })
+            ->where('status', 'published')
+            ->orderBy('published_at', 'desc')
+            ->take(5)
+            ->get();
+
+        if ($pengumumanCollection->isEmpty()) {
+            $this->dispatch('failed', ['message' => __('news.not_found')]);
+        } else {
+            $this->pengumuman = $pengumumanCollection->toArray();
+        }
+    } catch (\Throwable $th) {
+        $this->dispatch('failed', ['message' => 'Failed Get Pengumuman']);
+        Log::error('Failed Get Pengumuman', [
+            'error' => $th->getMessage(),
+            'line' => $th->getLine(),
+            'file' => $th->getFile(),
+        ]);
+    }
+}
+
 
     public function createNews()
     {
@@ -448,7 +461,7 @@ new #[Layout('components.layouts.home')] class extends Component {
                             @click="goToNews(data.id)">
                             <div
                                 class="flex h-64 w-full items-center justify-center overflow-hidden rounded-sm bg-gray-300">
-                                <img :src="data.image" alt="data.title"
+                                <img :src="`/storage/${data.image}`" alt="data.title"
                                     class="h-full w-full object-cover transition-all group-hover:scale-125" />
                             </div>
                             <div class="px-2">

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -14,16 +15,27 @@ class User extends Authenticatable
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, HasUuids;
 
+    public $incrementing = false;
+    protected $keyType = 'string';
+
+
+
     /**
      * The attributes that are mass assignable.
      *
      * @var list<string>
      */
     protected $fillable = [
-        'name',
+        'id',
+        'username',
+        'fullname',
         'email',
+        'role',
+        'id_department',
+        'position',
+        'phone_number',
+        'image',
         'password',
-        'image'
     ];
 
     /**
@@ -35,6 +47,13 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+
+    protected static function booted()
+    {
+        static::creating(function ($user) {
+            $user->id = (string) Str::uuid();
+        });
+    }
 
     /**
      * Get the attributes that should be cast.
@@ -60,8 +79,16 @@ class User extends Authenticatable
             ->implode('');
     }
 
-    public function news()
+    public function department()
     {
-        return $this->hasMany(News::class);
+    return $this->hasOne(Department::class, 'id', 'id_department');
     }
+
+    public function contents()
+    {
+        return $this->hasMany(Content::class);
+    }
+
+
+
 }

@@ -1,11 +1,14 @@
 <?php
 
 use Livewire\Volt\Component;
-use App\Models\News;
+use App\Models\Content;
 use Illuminate\Support\Facades\Log;
 
 new class extends Component {
     public $news;
+    public $relatedNews = [];
+    public $popularNews = [];
+
     public function running()
     {
         $this->getNews();
@@ -14,18 +17,46 @@ new class extends Component {
     private function getNews()
     {
         try {
-            $newsCollection = News::with('categories')
+            // Ambil 3 content terbaru dari kategori yang namanya mengandung "News"
+            $newsCollection = Content::with('categories')
                 ->whereHas('categories', function ($query) {
                     $query->where('name', 'like', '%News%');
                 })
-                ->orderBy('created_at', 'desc')
+                ->orderBy('published_at', 'desc') // gunakan published_at jika itu tanggal publikasi
                 ->take(3)
                 ->get();
+
             if ($newsCollection->isEmpty()) {
                 $this->dispatch('failed', ['message' => __('news.not_found')]);
             } else {
                 $this->news = $newsCollection->toArray();
             }
+
+            // Ambil 3 related posts dari kategori yang sama dengan first content
+            if ($this->news && count($this->news) > 0) {
+                $firstContentId = $this->news[0]['id'];
+                $firstContent = Content::with('categories')->find($firstContentId);
+
+                if ($firstContent) {
+                    $categoryIds = $firstContent->categories->pluck('id')->toArray();
+
+                    $this->relatedNews = Content::whereHas('categories', function ($q) use ($categoryIds) {
+                        $q->whereIn('id', $categoryIds);
+                    })
+                    ->where('id', '!=', $firstContentId)
+                    ->orderBy('published_at', 'desc')
+                    ->take(3)
+                    ->get()
+                    ->toArray();
+                }
+            }
+
+            // Ambil 4 content terpopuler berdasarkan views
+            $this->popularNews = Content::orderBy('views', 'desc')
+                ->take(4)
+                ->get()
+                ->toArray();
+
         } catch (\Throwable $th) {
             $this->dispatch('failed', ['message' => 'Failed Get News']);
             Log::error('Failed Get News', [
@@ -35,7 +66,8 @@ new class extends Component {
             ]);
         }
     }
-}; ?>
+};
+?>
 
 <section class="mb-10" x-data="initHome">
     <div class="linked-1:mt-14 mx-auto mt-8 max-w-[--max-width]" x-data="{ scrolled: false }">
@@ -65,7 +97,7 @@ new class extends Component {
                         @click="goToNews(data.id)">
                         <div
                             class="flex h-64 w-full items-center justify-center overflow-hidden rounded-sm bg-gray-300">
-                            <img :src="data.image" alt="data.title"
+                            <img :src="`/storage/${data.image}`" alt="data.title"
                                 class="h-full w-full object-cover transition-all group-hover:scale-125" />
                         </div>
                         <div class="px-2">
