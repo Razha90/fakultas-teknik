@@ -84,7 +84,7 @@
     window.addEventListener('loginFailed', event => {
     Swal.fire({
         icon: 'error',
-        title: 'Login Gagal!',
+        title: 'Login Gagal!', 
         text: 'Email atau password yang kamu masukkan salah. Coba lagi!',
         confirmButtonText: 'Oke'
     });
@@ -95,7 +95,10 @@ window.addEventListener('loginSuccess', event => {
         icon: 'success',
         title: 'Login Berhasil',
         showConfirmButton: false,
-        timer: 3000
+        timer: 3000,
+        willClose: () => {
+            window.location.href = "{{ route('dashboard') }}";
+        }
     });
 });
 

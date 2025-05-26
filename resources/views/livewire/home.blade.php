@@ -41,7 +41,7 @@ private function getNews()
             $this->news = $newsCollection->toArray();
         }
     } catch (\Throwable $th) {
-        dd('Error:', $th->getMessage(), $th->getLine(), $th->getFile());
+        // dd('Error:', $th->getMessage(), $th->getLine(), $th->getFile());
         $this->dispatch('failed', ['message' => 'Failed Get News']);
         Log::error('Failed Get News', [
             'error' => $th->getMessage(),

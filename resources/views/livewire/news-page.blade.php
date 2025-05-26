@@ -45,11 +45,11 @@ new #[Layout('components.layouts.home')] class extends Component {
         $content->increment('views');
         $after = $content->fresh()->views;
 
-        dd([
-            'id' => $id,
-            'views_before' => $before,
-            'views_after' => $after,
-        ]);
+        // dd([
+        //     'id' => $id,
+        //     'views_before' => $before,
+        //     'views_after' => $after,
+        // ]);
     }
 
     // Ambil 4 berita terpopuler berdasarkan views dan status published
