@@ -2,7 +2,7 @@
 
 use Livewire\Volt\Component;
 use Livewire\Attributes\Layout;
-use App\Models\News;
+use App\Models\Content;
 use App\Models\Category;
 use Illuminate\Support\Facades\Log;
 
@@ -33,40 +33,48 @@ new #[Layout('components.layouts.home')] class extends Component {
     }
 
     public function fullSearch($search = '', $sort = 'asc', $page = 1, $limit = 10, $category = '', $dateStart = '', $dateWhen = '')
-    {
-        try {
-            $this->loading = true;
-            $this->data = News::with('categories')
-                ->where('title', 'like', "%{$search}%")
-                ->when($category !== '', function ($q) use ($category) {
-                    $q->whereHas('categories', function ($query) use ($category) {
-                        $query->where('name', 'like', "%{$category}%");
-                    });
-                })
-                ->when($dateStart !== '', function ($q) use ($dateStart) {
-                    $q->whereDate('created_at', '>=', $dateStart);
-                })
-                ->when($dateWhen !== '', function ($q) use ($dateWhen) {
-                    $rangeDate = match ($dateWhen) {
-                        'day' => now()->subDay(),
-                        'week' => now()->subWeek(),
-                        'month' => now()->subMonth(),
-                        'year' => now()->subYear(),
-                        default => null,
-                    };
-                    if ($rangeDate) {
-                        $q->whereDate('created_at', '>=', $rangeDate);
-                    }
-                })
-                ->orderBy('created_at', $sort)
-                ->paginate($limit, ['*'], 'page', $page)
-                ->toArray();
-            $this->loading = false;
-        } catch (\Throwable $th) {
-            Log::error($th);
-            $this->error = __('news.not_found');
-        }
+{
+    try {
+        $this->loading = true;
+
+        // Validasi arah sorting
+        $sortDirection = in_array($sort, ['asc', 'desc']) ? $sort : 'asc';
+
+        $this->data = Content::with('categories') // ganti News:: menjadi Content::
+            ->when($search !== '', function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%");
+            })
+            ->when($category !== '', function ($q) use ($category) {
+                $q->whereHas('categories', function ($query) use ($category) {
+                    $query->where('name', 'like', "%{$category}%");
+                });
+            })
+            ->when($dateStart !== '', function ($q) use ($dateStart) {
+                $q->whereDate('created_at', '>=', $dateStart);
+            })
+            ->when($dateWhen !== '', function ($q) use ($dateWhen) {
+                $rangeDate = match ($dateWhen) {
+                    'day' => now()->subDay(),
+                    'week' => now()->subWeek(),
+                    'month' => now()->subMonth(),
+                    'year' => now()->subYear(),
+                    default => null,
+                };
+                if ($rangeDate) {
+                    $q->whereDate('created_at', '>=', $rangeDate);
+                }
+            })
+            ->orderBy('title', $sortDirection) // Sorting berdasarkan judul A-Z atau Z-A
+            ->paginate($limit, ['*'], 'page', $page)
+            ->toArray();
+
+        $this->loading = false;
+
+    } catch (\Throwable $th) {
+        Log::error($th);
+        $this->error = __('content.not_found'); // pastikan ada key ini di file terjemahan
     }
+}
 
     public function allCategory()
     {
@@ -262,7 +270,7 @@ new #[Layout('components.layouts.home')] class extends Component {
                             } catch (error) {
                                 console.error(error);
                             }
-                    
+
                         }
                     }"
                         class="bg-accent-white border-accent-white overflow-hidden rounded-xl border"
@@ -352,7 +360,7 @@ new #[Layout('components.layouts.home')] class extends Component {
                             <div x-data="{ hovered: false }"
                                 class="relative aspect-[16/9] ftnews-1:w-[405px] w-full cursor-pointer overflow-hidden ftnews-1:rounded-md rounded-none"
                                 @click="goToNews(data.id)" @mouseenter="hovered=true" @mouseleave="hovered=false">
-                                <img x-bind:class="hovered ? 'scale-110' : 'scale-100'" x-bind:src="data.image"
+                                <img x-bind:class="hovered ? 'scale-110' : 'scale-100'" x-bind:src="`/storage/${data.image}`"
                                     alt="data.title"
                                     class="absolute inset-0 left-0 top-0 h-full w-full object-cover transition-all" />
                                 <div x-bind:class="hovered ? 'opacity-0' : 'opacity-100'"
@@ -574,7 +582,7 @@ new #[Layout('components.layouts.home')] class extends Component {
                         } catch (error) {
                             console.error('Error in clickedCat:', error);
                         }
-                
+
                     }
                 }"
                     class="bg-accent-white border-accent-white mt-5 select-none overflow-hidden rounded-xl border"

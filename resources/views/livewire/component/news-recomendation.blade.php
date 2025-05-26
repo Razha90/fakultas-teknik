@@ -1,22 +1,28 @@
 <?php
 
 use Livewire\Volt\Component;
-use App\Models\News;
+use App\Models\Content;
 
 new class extends Component {
     public $data;
+
     public function search()
     {
         try {
-            $this->data = News::with('categories', 'user')->orderBy('created_at', 'desc')->orderBy('views', 'desc')->limit(8)->get()->toArray();
+            // Ambil 4 berita terpopuler dari Content berdasarkan views
+            $this->data = Content::with('categories', 'user')
+                ->orderBy('views', 'desc')
+                ->limit(4)
+                ->get()
+                ->toArray();
         } catch (\Throwable $th) {
             $this->dispatch('failed', [
                 'message' => __('news.error'),
             ]);
         }
     }
-}; ?>
-
+};
+?>
 <div x-data="initRecomendation" x-init="init" x-intersect="shown = true"
     class="lg:w-[20%] w-full min-w-[350px] bg-accent-white">
     <div class="flex flex-row justify-between border-b-2 border-gray-200 px-5 pb-3 pt-5">
@@ -72,7 +78,7 @@ new class extends Component {
                         <div
                             class="flex h-[60px] w-[70px] min-w-[70px] items-center justify-center overflow-hidden rounded-xl bg-gray-300 transition-all dark:bg-gray-700">
                             <img class="h-full w-full transition-all" x-bind:class="mouse ? 'scale-100' : 'scale-125'"
-                                x-bind:src="data.image" :alt="data.title" />
+                                x-bind:src="`/storage/${data.image}`" :alt="data.title" />
                         </div>
                     </template>
                     <div class="flex w-full flex-col overflow-hidden">
